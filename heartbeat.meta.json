@@ -1,0 +1,16 @@
+{
+  "_comment": "Hand-maintained facts heartbeat.ts cannot infer from the codebase: account tiers/plans and deployment target. Edit this by hand as things change. Keys under \"providers\" must match the provider \"name\" strings in scripts/heartbeat.ts.",
+  "providers": {
+    "GitHub": {
+      "tier": "free",
+      "notes": "personal OAuth app, device flow, no callback URL needed"
+    },
+    "OpenAI / Anthropic / OpenAI-compatible": {
+      "tier": "bring-your-own-key, each user pays their own provider directly"
+    }
+  },
+  "deployment": {
+    "target": "not yet decided",
+    "notes": "README still has the default create-next-app Vercel boilerplate, update once a target is chosen"
+  }
+}

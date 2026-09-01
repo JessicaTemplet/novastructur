@@ -1,0 +1,472 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Default: SQLite (via libsql driver adapter) for zero-setup local dev.
+// To switch to Postgres later: change provider to "postgresql", swap the
+// driver adapter in src/server/db.ts to @prisma/adapter-pg, and point
+// DATABASE_URL at a postgres connection string. Schema above is written
+// to be compatible with both.
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum AiProvider {
+  NONE
+  OPENAI
+  ANTHROPIC
+  OPENAI_COMPATIBLE
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users  User[]
+  teams  Team[]
+  labels Label[]
+  docs   Doc[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  avatarColor  String   @default("#6366f1")
+  role         Role     @default(MEMBER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Bring-your-own-LLM settings. API key is encrypted at rest (see src/server/ai/crypto.ts)
+  // and is never returned to the client after being saved.
+  aiProvider         AiProvider @default(NONE)
+  aiApiKeyEncrypted  String?
+  aiModel            String?
+  aiBaseUrl          String?
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  memberships    TeamMembership[]
+  assignedIssues Issue[]          @relation("Assignee")
+  createdIssues  Issue[]          @relation("Creator")
+  comments       Comment[]
+
+  githubConnection GitHubConnection?
+  pendingDeviceAuth PendingDeviceAuth?
+  savedViews       SavedView[]
+  docs             Doc[]
+  notifications       Notification[] @relation("NotificationRecipient")
+  notificationsCaused Notification[] @relation("NotificationActor")
+
+  @@index([organizationId])
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String
+  key          String
+  issueCounter Int      @default(0)
+  cycleCounter Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  memberships    TeamMembership[]
+  issues         Issue[]
+  workflowStates WorkflowState[]
+  cycles         Cycle[]
+  automationRules AutomationRule[]
+
+  @@unique([organizationId, key])
+}
+
+// A time-boxed cycle (sprint). Status (upcoming/active/completed) is derived
+// from startDate/endDate, not stored, so nothing needs manual state upkeep.
+model Cycle {
+  id        String   @id @default(cuid())
+  number    Int
+  name      String?
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  issues Issue[]
+
+  @@unique([teamId, number])
+}
+
+model TeamMembership {
+  id     String @id @default(cuid())
+  userId String
+  teamId String
+  role   Role   @default(MEMBER)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+enum WorkflowStateType {
+  TRIAGE
+  BACKLOG
+  UNSTARTED
+  STARTED
+  COMPLETED
+  CANCELED
+}
+
+model WorkflowState {
+  id       String            @id @default(cuid())
+  name     String
+  type     WorkflowStateType
+  color    String
+  position Float
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  issues Issue[]
+
+  @@unique([teamId, name])
+}
+
+enum IssuePriority {
+  NO_PRIORITY
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum IssueType {
+  EPIC
+  STORY
+  TASK
+  BUG
+  SUBTASK
+}
+
+model Issue {
+  id          String        @id @default(cuid())
+  identifier  String
+  number      Int
+  title       String
+  description String?
+  type        IssueType     @default(TASK)
+  priority    IssuePriority @default(NO_PRIORITY)
+  estimate    Float?
+  dueDate     DateTime?
+  sortOrder   Float         @default(0)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+  canceledAt  DateTime?
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  stateId String
+  state   WorkflowState @relation(fields: [stateId], references: [id])
+
+  assigneeId String?
+  assignee   User?   @relation("Assignee", fields: [assigneeId], references: [id])
+
+  creatorId String
+  creator   User   @relation("Creator", fields: [creatorId], references: [id])
+
+  parentId  String?
+  parent    Issue?  @relation("SubIssues", fields: [parentId], references: [id], onDelete: SetNull)
+  subIssues Issue[] @relation("SubIssues")
+
+  cycleId String?
+  cycle   Cycle?  @relation(fields: [cycleId], references: [id], onDelete: SetNull)
+
+  labels   IssueLabel[]
+  comments Comment[]
+
+  // Observed-remove set state backing the labels relation above (see
+  // src/server/crdt/issue-labels.ts). The IssueLabel rows are the fast,
+  // queryable, materialized view; this column is the merge-safe source
+  // of truth that survives concurrent add/remove without one request's
+  // change silently discarding another's.
+  labelsCrdt String?
+
+  outgoingRelations IssueRelation[] @relation("SourceIssue")
+  incomingRelations IssueRelation[] @relation("TargetIssue")
+
+  githubLinks IssueGitHubLink[]
+  linkedDocs  DocIssueLink[]
+  notifications Notification[]
+
+  @@unique([teamId, number])
+  @@index([teamId, stateId])
+  @@index([assigneeId])
+  @@index([parentId])
+  @@index([identifier])
+  @@index([cycleId])
+}
+
+model Label {
+  id    String @id @default(cuid())
+  name  String
+  color String
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  issues IssueLabel[]
+
+  @@unique([organizationId, name])
+}
+
+model IssueLabel {
+  issueId String
+  labelId String
+
+  issue Issue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  label Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([issueId, labelId])
+}
+
+enum IssueRelationType {
+  BLOCKS
+  RELATES_TO
+  DUPLICATES
+}
+
+model IssueRelation {
+  id        String            @id @default(cuid())
+  type      IssueRelationType
+  createdAt DateTime          @default(now())
+
+  sourceId String
+  targetId String
+
+  source Issue @relation("SourceIssue", fields: [sourceId], references: [id], onDelete: Cascade)
+  target Issue @relation("TargetIssue", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId, type])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  @@index([issueId])
+}
+
+// A personal saved filter combination on the issue list — a bookmark of
+// filter criteria, not a shared/permissioned "view" object.
+model SavedView {
+  id         String             @id @default(cuid())
+  name       String
+  teamId     String?
+  assigneeId String?
+  priority   IssuePriority?
+  labelId    String?
+  stateType  WorkflowStateType?
+  query      String?
+  createdAt  DateTime           @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// A wiki-style doc page (markdown), nestable so specs can live next to the
+// work instead of in a separate tool. Deleting a parent just orphans its
+// children back to the root rather than cascading, so a page tree can't be
+// wiped out by one accidental delete.
+model Doc {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @default("")
+  sortOrder Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Fugue sequence-CRDT snapshot backing `content` above (see
+  // src/server/crdt/doc-content.ts). `content` is the fast, queryable,
+  // materialized text; this column is the merge-safe source of truth,
+  // a full node snapshot (not an append-only op log, see Fugue.toSnapshot
+  // in src/lib/crdt/fugue.ts for why), that lets two concurrent whole-
+  // document saves merge instead of one clobbering the other.
+  contentCrdt String?
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  parentId String?
+  parent   Doc?   @relation("DocTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Doc[]  @relation("DocTree")
+
+  linkedIssues DocIssueLink[]
+
+  @@index([organizationId])
+  @@index([parentId])
+}
+
+model DocIssueLink {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  docId   String
+  doc     Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@unique([docId, issueId])
+  @@index([issueId])
+}
+
+enum NotificationType {
+  ASSIGNED
+  MENTIONED
+  COMMENT
+}
+
+// In-app only for now — no email/Slack fan-out. Kept to the three events that
+// are actually actionable (assigned, @mentioned, commented-on), not every
+// possible activity, so this doesn't turn into noise.
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  message   String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  userId String
+  user   User   @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+
+  actorId String?
+  actor   User?   @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  issueId String?
+  issue   Issue?  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+}
+
+enum AutomationTrigger {
+  ISSUE_CREATED
+  STATE_CHANGED
+  LABEL_ADDED
+  ASSIGNED
+}
+
+enum AutomationAction {
+  SET_STATE
+  SET_ASSIGNEE
+  SET_PRIORITY
+  ADD_LABEL
+}
+
+// Deliberately just "when X happens, do Y" — one trigger, one action, no
+// AND/OR condition builder — per the anti-bloat stance on elaborate
+// workflow automation that nobody remembers the purpose of a year later.
+model AutomationRule {
+  id        String   @id @default(cuid())
+  name      String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  trigger        AutomationTrigger
+  triggerStateId String?
+  triggerLabelId String?
+
+  action           AutomationAction
+  actionStateId    String?
+  actionAssigneeId String?
+  actionPriority   IssuePriority?
+  actionLabelId    String?
+
+  @@index([teamId])
+}
+
+// Transient state for a GitHub OAuth device-flow connection in progress.
+// Persisted (not held in a module-level in-memory Map) so a poll started on
+// one server instance can be completed by a request handled on another —
+// an in-memory store only works for a single long-lived process.
+model PendingDeviceAuth {
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceCode String
+  interval   Int
+  expiresAt  DateTime
+}
+
+// GitHub integration: per-user OAuth device-flow connection, used to call the
+// GitHub API on behalf of whichever org member linked/synced a PR.
+model GitHubConnection {
+  id                   String   @id @default(cuid())
+  githubLogin          String
+  githubUserId         Int
+  accessTokenEncrypted String
+  scope                String
+  connectedAt          DateTime @default(now())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum GitHubPrState {
+  OPEN
+  MERGED
+  CLOSED
+}
+
+// A PR linked to an issue via pasted URL. Not scoped to a configured repo,
+// so prNumber is only unique per (repo, issue), not globally.
+model IssueGitHubLink {
+  id           String        @id @default(cuid())
+  repoOwner    String
+  repoName     String
+  prNumber     Int
+  prUrl        String
+  prTitle      String
+  prState      GitHubPrState @default(OPEN)
+  isDraft      Boolean       @default(false)
+  headBranch   String?
+  authorLogin  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  lastSyncedAt DateTime      @default(now())
+
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, repoOwner, repoName, prNumber])
+  @@index([issueId])
+}
