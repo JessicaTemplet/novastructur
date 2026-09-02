@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "mcp": "tsx src/mcp/server.ts",
+    "install-git-hooks": "tsx scripts/install-git-hooks.ts",
     "heartbeat": "tsx scripts/heartbeat.ts",
     "test:crdt": "tsx --test src/lib/crdt/*.test.ts"
   },
