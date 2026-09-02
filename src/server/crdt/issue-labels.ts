@@ -61,9 +61,12 @@ export async function applyIssueLabelOps(
 
     await tx.issueLabel.deleteMany({ where: { issueId } });
     if (finalLabelIds.length) {
+      // No skipDuplicates: SQLite'"'"'s Prisma client doesn'"'"'t support it (type
+      // error, not a runtime one), and it'"'"'s not actually needed here anyway -
+      // set.values() already reads from an internal Map keyed by value, so
+      // finalLabelIds can'"'"'t contain a duplicate label id to begin with.
       await tx.issueLabel.createMany({
         data: finalLabelIds.map((labelId) => ({ issueId, labelId })),
-        skipDuplicates: true,
       });
     }
     await tx.issue.update({

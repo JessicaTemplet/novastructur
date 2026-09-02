@@ -336,8 +336,23 @@ async function main() {
             priority: a.priority as never,
             stateId,
             assigneeId,
-            labelIds: a.labels ? await resolveLabelIds(caller, a.labels as string[]) : undefined,
           });
+
+          // update doesn'"'"'t take a bulk label array (see issue.ts'"'"'s addLabel/
+          // removeLabel comment: a whole-array replace can silently clobber a
+          // concurrent add/remove of a *different* label), so a label change
+          // here is applied as a diff against the current set instead.
+          if (a.labels) {
+            const desiredIds = new Set(await resolveLabelIds(caller, a.labels as string[]));
+            const currentIds = new Set(existing.labels.map((l) => l.label.id));
+            for (const id of desiredIds) {
+              if (!currentIds.has(id)) await caller.issue.addLabel({ id: existing.id, labelId: id });
+            }
+            for (const id of currentIds) {
+              if (!desiredIds.has(id)) await caller.issue.removeLabel({ id: existing.id, labelId: id });
+            }
+          }
+
           return { content: [{ type: "text", text: `Updated ${issue.identifier}` }] };
         }
 
