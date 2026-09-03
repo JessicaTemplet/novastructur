@@ -61,3 +61,41 @@ test("snapshot restore does not require replaying ops (no causal-order errors on
   assert.equal(op.id.counter > 0, true);
   assert.equal(restored.toArray().join(""), "acd");
 });
+
+test("compacting before snapshotting produces a smaller snapshot that still round-trips and merges correctly", () => {
+  // The exact sequence doc-content.ts runs on every save: apply an
+  // edit, compact, then persist the snapshot. Deletes come off the
+  // TAIL here (not the middle), since only trailing characters are
+  // leaf tombstones in a sequentially-typed chain, see fugue.test.ts's
+  // compact tests for why.
+  const doc = new Fugue<string>(new Clock("A"));
+  typeString(doc, "hello world");
+  doc.deleteAt(10); // trailing 'd', a leaf
+  doc.deleteAt(9); // trailing 'l' (now the last char), a leaf once 'd' is gone
+  const uncompactedSize = doc.toSnapshot().length;
+
+  doc.compact();
+  const compactedSnapshot = doc.toSnapshot();
+  assert.ok(
+    compactedSnapshot.length < uncompactedSize,
+    "compacting before the snapshot should leave fewer nodes than skipping it would"
+  );
+
+  const restored = Fugue.fromSnapshot(compactedSnapshot, new Clock("A"));
+  assert.equal(restored.toArray().join(""), "hello wor");
+
+  // A concurrent second replica, restored from the SAME (compacted)
+  // snapshot, makes its own concurrent edit, same scenario as the
+  // uncompacted round-trip test above, confirming compaction doesn't
+  // change what a later merge produces.
+  const concurrent = Fugue.fromSnapshot(compactedSnapshot, new Clock("B"));
+  const concurrentOp = concurrent.insertAt(0, "!");
+  const tailOps: FugueOp<string>[] = [];
+  for (let i = 0; i < " there".length; i++) tailOps.push(restored.insertAt(9 + i, " there"[i]));
+
+  for (const op of tailOps) concurrent.applyOp(op);
+  restored.applyOp(concurrentOp);
+
+  assert.equal(restored.toArray().join(""), concurrent.toArray().join(""));
+  assert.equal(restored.toArray().join(""), "!hello wor there");
+});

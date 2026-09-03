@@ -57,6 +57,10 @@ function diffToOps(oldStr: string, newStr: string): { insertAt: number; deleteCo
  * first-ever save), `baselineContent` may be omitted, this falls back
  * to diffing against the current server content, the same weaker
  * guarantee `doc.update` had before this existed.
+ *
+ * Calls `doc.compact()` before persisting, so every save also prunes
+ * whatever tombstones just became removable. See `Fugue.compact()`'s
+ * own doc comment for why that's safe to do unconditionally here.
  */
 export async function applyDocContentReplace(
   db: PrismaClient,
@@ -82,6 +86,7 @@ export async function applyDocContentReplace(
     for (let i = 0; i < insertText.length; i++) doc.insertAt(insertAt + i, insertText[i]);
 
     const materialized = doc.toArray().join("");
+    doc.compact();
     await tx.doc.update({
       where: { id: docId },
       data: {

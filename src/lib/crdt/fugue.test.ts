@@ -118,3 +118,84 @@ test("concurrent delete of the same character from two replicas converges", () =
   assert.equal(replicaA.toArray().join(""), replicaB.toArray().join(""));
   assert.equal(replicaA.toArray().join(""), "i");
 });
+
+test("compact removes a leaf tombstone without changing visible content", () => {
+  const doc = new Fugue<string>(new Clock("A"));
+  typeString(doc, "hello world");
+  // Sequential typing makes a straight chain where each character's
+  // child is the next one typed, so only the TRAILING character has no
+  // child, deleting from the middle (the space, say) leaves a
+  // tombstone that still has a live child and correctly isn't prunable,
+  // see the "leaves a tombstone alone" test below for that case.
+  doc.deleteAt(10); // trailing 'd', nothing was ever typed after it
+  const before = doc.toArray().join("");
+  const beforeCount = doc.toSnapshot().length;
+
+  const removed = doc.compact();
+
+  assert.equal(doc.toArray().join(""), before);
+  assert.equal(removed, 1);
+  assert.equal(doc.toSnapshot().length, beforeCount - 1);
+});
+
+test("compact leaves a tombstone alone while it still has children", () => {
+  const doc = new Fugue<string>(new Clock("A"));
+  typeString(doc, "ab"); // 'b' becomes a child of 'a' in the tree
+  doc.deleteAt(0); // tombstone 'a', but 'b' still hangs off it
+
+  const removed = doc.compact();
+
+  assert.equal(removed, 0, "a tombstone with a live child must not be pruned");
+  assert.equal(doc.toArray().join(""), "b");
+});
+
+test("compact peels a chain of tombstones inward, once the innermost one becomes a leaf too", () => {
+  const doc = new Fugue<string>(new Clock("A"));
+  typeString(doc, "ab");
+  doc.deleteAt(0); // 'a', still has 'b' hanging off it
+  doc.deleteAt(0); // 'b' (the only visible char left), now a leaf tombstone
+  const beforeCount = doc.toSnapshot().length;
+
+  const removed = doc.compact();
+
+  assert.equal(removed, 2, "both tombstones should prune in one pass, innermost first");
+  assert.equal(doc.toSnapshot().length, beforeCount - 2);
+  assert.equal(doc.toArray().join(""), "");
+});
+
+test("compacting does not break inserting into a position a tombstone used to anchor", () => {
+  const doc = new Fugue<string>(new Clock("A"));
+  typeString(doc, "hello");
+  doc.deleteAt(4); // tombstone 'o', a leaf, prunable immediately
+  doc.compact();
+  // Same scenario as the plain "local delete" test above, exercising the
+  // full-tree-successor logic in insertAt, but now the successor
+  // tombstone it used to resolve against is gone from the tree entirely.
+  doc.insertAt(4, "p");
+  assert.equal(doc.toArray().join(""), "hellp");
+});
+
+test("compacting one replica does not break convergence with a replica that never compacts", () => {
+  // compact() is purely local cleanup, it never produces an op, so this
+  // simulates the real deployment: doc-content.ts compacts on every
+  // save, but nothing tells any other in-flight session that happened,
+  // nor does anything need to.
+  const a = new Fugue<string>(new Clock("A"));
+  const opsInsert = typeString(a, "hello");
+  const opDelete = a.deleteAt(4); // tombstone 'o'
+  a.compact();
+
+  const b = new Fugue<string>(new Clock("B"));
+  for (const op of opsInsert) b.applyOp(op);
+  b.applyOp(opDelete);
+
+  assert.equal(a.toArray().join(""), b.toArray().join(""));
+
+  // And a further edit generated on the compacted replica still applies
+  // cleanly to the uncompacted one, which is still carrying the
+  // tombstone a already dropped.
+  const furtherOp = a.insertAt(4, "p");
+  b.applyOp(furtherOp);
+  assert.equal(a.toArray().join(""), b.toArray().join(""));
+  assert.equal(a.toArray().join(""), "hellp");
+});

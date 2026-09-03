@@ -68,12 +68,20 @@ function key(id: OpId): string {
  * specific guarantee as tested-for-the-common-case, not formally
  * re-derived here.
  *
- * Deletions are tombstones. A node is never removed from the tree,
- * since a later insert may still reference it as a neighbor. No
- * garbage collection in this version, the same simplification most
- * first-pass CRDT implementations make (tombstone GC needs a way to
- * know every replica has seen the delete, which needs its own protocol
- * on top of this).
+ * Deletions are tombstones. A node is never removed from the tree purely
+ * by being deleted, since a later insert may still reference it as a
+ * neighbor, or one of its own children may still depend on it for tree
+ * structure. `compact()` below removes exactly the tombstones that have
+ * neither reason left to stay: no children, so nothing in the tree
+ * depends on the node's position anymore. That is NOT the general
+ * distributed tombstone-GC problem ("has every replica seen this
+ * delete yet"), which still needs its own protocol and is still not
+ * built here, it is safe specifically because of how NovaStructur
+ * applies edits: every op is generated fresh against the current
+ * server-side tree, in the same transaction that persists the result,
+ * never replayed later from an independent op log. See `compact()`'s
+ * own doc comment for the full argument, and fugue.test.ts for the
+ * cases that pin it down.
  *
  * This class assumes causal delivery of ops: a node's parent must be
  * applied before the node itself. That's a transport-layer concern
@@ -215,6 +223,75 @@ export class Fugue<T> {
     const op: FugueDeleteOp = { type: "delete", id: target.id };
     this.applyDelete(op);
     return op;
+  }
+
+  // Remove tombstoned nodes that have become structurally dead weight: a
+  // deleted node with zero children. `fullList()`/`insertAt` only ever
+  // reach a tombstone via its parent's child-scan (see `childrenOf`,
+  // `subtree`), which reads each node's OWN `.parent` field, not the
+  // parent's. So a leaf tombstone's removal can't strand anything: no
+  // node depended on that specific node object, only on whatever
+  // position it held in `fullList()`, and once it has no children,
+  // nothing was still anchored to it there either.
+  //
+  // Removing a leaf tombstone can turn its own (also-tombstoned) parent
+  // into a leaf too, so this peels inward, repeatedly, in one O(n) pass
+  // via a child-count map, until nothing removable is left. It never
+  // touches a non-deleted node, and never removes a tombstone that still
+  // has children (that would sever the parent link its remaining
+  // descendants rely on to be found during traversal, see fugue.test.ts
+  // for why the chained case works).
+  //
+  // Purely local cleanup: it doesn't produce an op, has nothing to
+  // broadcast, and a replica that never calls this still converges fine
+  // with one that does (its tree just stays a little larger).
+  //
+  // Scope this to how doc-content.ts actually uses it: call it right
+  // before persisting, on the same tree that just generated its own new
+  // ops fresh, in the same transaction. Do NOT call it on a replica that
+  // will later receive an op via applyOp() that was generated somewhere
+  // else, against a DIFFERENT, uncompacted copy of tree history, that
+  // op's parent could be exactly the node this call just removed, and
+  // applyOp throws rather than silently drop it (see the fuzz test in
+  // fugue.fuzz.test.ts that pins this distinction down). NovaStructur
+  // never does that today, every op is generated fresh against whatever
+  // is currently persisted, never replayed from an independent history,
+  // which is also why it's fine for a pruned node's OpId counter to get
+  // reused by a later op from the same site: nothing anywhere still
+  // holds a reference to the original one to collide with.
+  compact(): number {
+    const childCount = new Map<string, number>();
+    for (const n of this.nodes.values()) {
+      const pk = key(n.parent);
+      childCount.set(pk, (childCount.get(pk) ?? 0) + 1);
+    }
+
+    const queue: string[] = [];
+    for (const n of this.nodes.values()) {
+      const nk = key(n.id);
+      if (n.deleted && (childCount.get(nk) ?? 0) === 0) queue.push(nk);
+    }
+
+    let removed = 0;
+    while (queue.length > 0) {
+      const nk = queue.pop()!;
+      const node = this.nodes.get(nk);
+      if (!node) continue;
+
+      this.nodes.delete(nk);
+      this.appliedDeletes.delete(nk);
+      removed++;
+
+      const pk = key(node.parent);
+      const remaining = (childCount.get(pk) ?? 0) - 1;
+      childCount.set(pk, remaining);
+      if (remaining === 0) {
+        const parentNode = this.nodes.get(pk);
+        if (parentNode?.deleted) queue.push(pk);
+      }
+    }
+
+    return removed;
   }
 
   // A snapshot of every node (tombstones included), for persistence.

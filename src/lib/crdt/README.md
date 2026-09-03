@@ -52,10 +52,23 @@ writers).
   parent hasn't arrived yet rather than silently dropping it, so
   whatever transport you build needs to either guarantee per-site
   ordering (easy, most queues do this for free) or buffer and retry.
-- **Tombstone garbage collection.** Fugue never removes deleted nodes.
-  Fine at small-to-medium scale, becomes a real cost on a Doc that
-  gets edited for years. Needs its own "everyone has seen this
-  delete" protocol before it's safe to build, noted in `fugue.ts`.
+- **Tombstone garbage collection.** `Fugue.compact()` prunes the
+  narrower, easy case: a deleted node with no children, which can
+  never be needed for tree structure or as an insert anchor again, see
+  its doc comment for the full argument. `doc-content.ts` calls it on
+  every save, so a Doc that gets edited for years doesn't accumulate a
+  tombstone per deleted character forever. What's still not built is
+  the general, harder problem this is often confused with: pruning a
+  tombstone that a remote, not-yet-synced replica might still reference
+  in an op it hasn't sent yet, which needs an actual "everyone has seen
+  this delete" protocol (version vectors, causal stability tracking).
+  `compact()`'s safety argument leans on NovaStructur not having that
+  problem today, every op is generated fresh against the current
+  server-side tree in the same transaction that persists it, never
+  replayed later from an independent op log, so there's no stale
+  replica to strand. If NovaStructur ever grows real offline,
+  multi-replica sync, that assumption stops holding and this needs
+  revisiting.
 
 ## Fugue specifically: what's verified vs. what's assumed
 
