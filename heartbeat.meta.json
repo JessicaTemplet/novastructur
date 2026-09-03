@@ -11,6 +11,6 @@
   },
   "deployment": {
     "target": "not yet decided",
-    "notes": "README still has the default create-next-app Vercel boilerplate, update once a target is chosen"
+    "notes": "README rewritten (setup, architecture, CRDT design); update this note once a deployment target is chosen"
   }
 }
