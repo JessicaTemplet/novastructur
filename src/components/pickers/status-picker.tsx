@@ -41,7 +41,7 @@ export function StatusPicker({
   return (
     <Dropdown
       trigger={
-        <span className="flex items-center gap-1.5 rounded px-1 py-0.5 hover:bg-neutral-100">
+        <span className="flex items-center gap-1.5 rounded px-1 py-0.5 hover:bg-white/5">
           <StatusDot color={current.color} />
         </span>
       }

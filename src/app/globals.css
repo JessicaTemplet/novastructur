@@ -10,6 +10,43 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-plus-jakarta);
+  --font-body: var(--font-inter);
+
+  /* NovaStructur dark "HUD" tokens, from the App.dc design reference.
+     Additive only: nothing above this changes, so any component not yet
+     restyled to use these keeps its current (light/indigo) look. Every
+     page in the App.dc mockup is now restyled: app-shell.tsx (incl. root
+     canvas bg), command-palette.tsx, login/page.tsx, create-issue-modal.tsx,
+     notification-bell.tsx, ui/dropdown.tsx, all pickers/*.tsx,
+     issue-row.tsx, lib/markdown.tsx, (app)/page.tsx (Issues), (app)/triage,
+     (app)/board + kanban/*.tsx, (app)/cycles + cycle/*.tsx, (app)/roadmap,
+     (app)/docs + doc-editor/doc-tree, issue/[identifier] detail page + its
+     6 components (sub-issues, relations, github-links, linked-docs,
+     comments). Still light: settings pages (no design reference for
+     these yet). */
+  --color-ns-bg: oklch(19% 0.014 260);
+  --color-ns-bg-sidebar: oklch(17% 0.014 260);
+  --color-ns-bg-elevated: oklch(23% 0.02 260);
+  --color-ns-border: oklch(30% 0.02 260);
+  --color-ns-border-strong: oklch(36% 0.02 260);
+  --color-ns-text: #f2fbfc;
+  --color-ns-text-body: #e6ebf2;
+  --color-ns-text-dim: oklch(75% 0.006 260);
+  --color-ns-text-faint: oklch(60% 0.006 260);
+  --color-ns-accent: oklch(82% 0.15 200);
+  --color-ns-accent-bg: oklch(22% 0.04 200);
+
+  --color-ns-status-backlog: oklch(80% 0.006 260);
+  --color-ns-status-todo: oklch(82% 0.15 200);
+  --color-ns-status-inprogress: oklch(82% 0.17 80);
+  --color-ns-status-inreview: oklch(78% 0.17 330);
+  --color-ns-status-done: oklch(79% 0.16 150);
+
+  --color-ns-priority-urgent: oklch(70% 0.19 25);
+  --color-ns-priority-high: oklch(80% 0.17 80);
+  --color-ns-priority-medium: oklch(82% 0.15 200);
+  --color-ns-priority-low: oklch(80% 0.006 260);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +60,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Subtle dot-grid backdrop used behind the dark HUD surfaces (sidebar,
+   login, command palette). Not applied globally, add ns-grid-bg where needed. */
+.ns-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+  background-size: 24px 24px;
 }

@@ -67,7 +67,7 @@ export function LabelPicker({ issueId, current }: { issueId: string; current: La
   return (
     <Dropdown
       trigger={
-        <span className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-neutral-500 hover:bg-neutral-100">
+        <span className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-ns-text-faint hover:bg-white/5">
           <Tag className="h-3 w-3" /> Labels
         </span>
       }
@@ -81,11 +81,11 @@ export function LabelPicker({ issueId, current }: { issueId: string; current: La
                 style={{ backgroundColor: label.color }}
               />
               <span className="flex-1">{label.name}</span>
-              {currentIds.has(label.id) && <Check className="h-3.5 w-3.5 text-indigo-600" />}
+              {currentIds.has(label.id) && <Check className="h-3.5 w-3.5 text-ns-accent" />}
             </DropdownItem>
           ))}
           {allLabels.length === 0 && (
-            <div className="px-3 py-2 text-xs text-neutral-400">No labels yet</div>
+            <div className="px-3 py-2 text-xs text-ns-text-faint">No labels yet</div>
           )}
         </>
       )}

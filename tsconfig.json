@@ -30,5 +30,11 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    // Frozen design-reference mockup, not live app code, see
+    // eslint.config.mjs for the same reasoning. Excluded here too since
+    // `tsc`/`next build` don't respect eslint's ignore list.
+    "src/app/NovaStructur App.tsx"
+  ]
 }

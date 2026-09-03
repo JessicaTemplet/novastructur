@@ -8,7 +8,7 @@ function renderInline(text: string): ReactNode[] {
     if (!part) return null;
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={i} className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-[0.85em]">
+        <code key={i} className="rounded bg-white/10 px-1 py-0.5 font-mono text-[0.85em] text-ns-text-body">
           {part.slice(1, -1)}
         </code>
       );
@@ -23,7 +23,7 @@ function renderInline(text: string): ReactNode[] {
     if (link) {
       const [, label, url] = link;
       return SAFE_URL.test(url!) ? (
-        <a key={i} href={url} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+        <a key={i} href={url} target="_blank" rel="noreferrer" className="text-ns-accent hover:underline">
           {label}
         </a>
       ) : (
@@ -67,7 +67,7 @@ export function Markdown({ content }: { content: string }) {
       const Tag = (`h${level}` as const) as "h1" | "h2" | "h3";
       const sizes = { h1: "text-xl font-semibold", h2: "text-lg font-semibold", h3: "text-base font-semibold" };
       blocks.push(
-        <Tag key={key++} className={`${sizes[Tag]} mt-4 mb-1 text-neutral-900 first:mt-0`}>
+        <Tag key={key++} className={`${sizes[Tag]} mt-4 mb-1 text-ns-text first:mt-0`}>
           {renderInline(heading[2]!)}
         </Tag>
       );
@@ -82,7 +82,7 @@ export function Markdown({ content }: { content: string }) {
         i++;
       }
       blocks.push(
-        <ul key={key++} className="my-1 list-disc space-y-0.5 pl-5 text-sm text-neutral-700">
+        <ul key={key++} className="my-1 list-disc space-y-0.5 pl-5 text-sm text-ns-text-body">
           {items.map((item, idx) => (
             <li key={idx}>{renderInline(item)}</li>
           ))}
@@ -102,7 +102,7 @@ export function Markdown({ content }: { content: string }) {
       i++;
     }
     blocks.push(
-      <p key={key++} className="my-1.5 text-sm leading-relaxed text-neutral-700">
+      <p key={key++} className="my-1.5 text-sm leading-relaxed text-ns-text-body">
         {renderInline(paraLines.join(" "))}
       </p>
     );

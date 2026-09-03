@@ -24,7 +24,7 @@ export function Comments({ issueId, comments }: { issueId: string; comments: Com
 
   return (
     <div>
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+      <h3 className="mb-2 font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
         Comments {comments.length > 0 && `(${comments.length})`}
       </h3>
 
@@ -34,10 +34,10 @@ export function Comments({ issueId, comments }: { issueId: string; comments: Com
             <Avatar name={c.author.name} color={c.author.avatarColor} size={24} />
             <div className="flex-1">
               <div className="flex items-baseline gap-2">
-                <span className="text-sm font-medium text-neutral-800">{c.author.name}</span>
-                <span className="text-xs text-neutral-400">{new Date(c.createdAt).toLocaleString()}</span>
+                <span className="text-sm font-medium text-ns-text">{c.author.name}</span>
+                <span className="text-xs text-ns-text-faint">{new Date(c.createdAt).toLocaleString()}</span>
               </div>
-              <p className="whitespace-pre-wrap text-sm text-neutral-700">{c.body}</p>
+              <p className="whitespace-pre-wrap text-sm text-ns-text-body">{c.body}</p>
             </div>
           </div>
         ))}
@@ -55,12 +55,12 @@ export function Comments({ issueId, comments }: { issueId: string; comments: Com
             }}
             placeholder="Leave a comment... (⌘+Enter to send)"
             rows={2}
-            className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm outline-none focus:border-indigo-400"
+            className="w-full rounded-md border border-ns-border-strong bg-white/[.03] px-2.5 py-1.5 text-sm text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70"
           />
           <button
             onClick={() => body.trim() && addComment.mutate({ issueId, body: body.trim() })}
             disabled={!body.trim() || addComment.isPending}
-            className="mt-1.5 rounded-md bg-neutral-800 px-3 py-1 text-xs font-medium text-white disabled:opacity-40"
+            className="mt-1.5 rounded-md bg-ns-accent-bg px-3 py-1 text-xs font-bold text-ns-accent ring-1 ring-ns-accent/70 disabled:opacity-40"
           >
             Comment
           </button>

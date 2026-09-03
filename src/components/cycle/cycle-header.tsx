@@ -30,7 +30,7 @@ export function CycleHeader({ cycle, issues }: { cycle: Cycle; issues: IssueForP
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
   return (
-    <div className="border-b border-neutral-100 bg-white px-4 py-3">
+    <div className="border-b border-ns-border px-4 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {editing ? (
@@ -44,12 +44,12 @@ export function CycleHeader({ cycle, issues }: { cycle: Cycle; issues: IssueForP
               }}
               onBlur={() => update.mutate({ id: cycle.id, name: name.trim() || null })}
               placeholder={`Cycle ${cycle.number}`}
-              className="rounded border border-neutral-200 px-1.5 py-0.5 text-sm font-semibold outline-none focus:border-indigo-400"
+              className="rounded border border-ns-border-strong bg-white/[.03] px-1.5 py-0.5 text-sm font-semibold text-ns-text-body outline-none focus:border-ns-accent/70"
             />
           ) : (
             <button
               onClick={() => setEditing(true)}
-              className="text-sm font-semibold text-neutral-900 hover:underline"
+              className="text-sm font-semibold text-ns-text hover:underline"
             >
               {cycleLabel(cycle)}
             </button>
@@ -63,22 +63,25 @@ export function CycleHeader({ cycle, issues }: { cycle: Cycle; issues: IssueForP
           >
             {CYCLE_STATUS_META[status].label}
           </span>
-          <span className="text-xs text-neutral-400">{cycleDateRange(cycle)}</span>
+          <span className="text-xs text-ns-text-faint">{cycleDateRange(cycle)}</span>
         </div>
-        <div className="flex items-center gap-2 text-xs text-neutral-500">
+        <div className="flex items-center gap-2 text-xs text-ns-text-dim">
           <span>
             {done}/{total} issues
           </span>
           {totalPts > 0 && (
-            <span className="text-neutral-300">
+            <span className="text-ns-text-faint">
               · {donePts}/{totalPts} pts
             </span>
           )}
         </div>
       </div>
       {total > 0 && (
-        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-neutral-100">
-          <div className="h-full rounded-full bg-indigo-500" style={{ width: `${pct}%` }} />
+        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/[.06]">
+          <div
+            className="h-full rounded-full bg-ns-accent shadow-[0_0_8px_var(--color-ns-accent)]"
+            style={{ width: `${pct}%` }}
+          />
         </div>
       )}
     </div>

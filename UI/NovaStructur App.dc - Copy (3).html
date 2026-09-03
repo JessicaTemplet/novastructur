@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:oklch(19% 0.014 260);font-family:'Inter',sans-serif}
+a{color:oklch(82% 0.15 200)}
+a:hover{color:oklch(88% 0.13 200)}
+</style>
+</helmet>
+
+<sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}">
+<div style="width:100%;height:100vh;display:flex;align-items:center;justify-content:center;background:oklch(19% 0.014 260);background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:24px 24px;font-family:'Inter',sans-serif">
+  <div style="width:360px;display:flex;flex-direction:column;align-items:center;gap:18px;padding:36px 32px;background:oklch(17% 0.014 260);border:1px solid oklch(36% 0.02 260);border-radius:14px;box-shadow:0 0 40px rgba(0,0,0,.4)">
+    <img src="assets/novastructur-logo.png" style="width:56px;height:56px;border-radius:12px">
+    <div style="text-align:center">
+      <div style="font:800 20px 'Plus Jakarta Sans';color:#f2fbfc;letter-spacing:.02em">NOVASTRUCTUR</div>
+      <div style="font:500 12.5px 'Inter';color:oklch(80% 0.006 260);margin-top:6px">Where structure meets a little bit of joy</div>
+    </div>
+    <div style="width:100%;background:oklch(22% 0.04 200);border:1px solid oklch(82% 0.15 200 / .7);box-shadow:0 0 16px oklch(82% 0.15 200 / .35);color:oklch(90% 0.11 200);border-radius:8px;padding:11px;font:700 13px 'Plus Jakarta Sans';text-align:center;letter-spacing:.02em;cursor:pointer" onClick="{{ login }}">Continue with GitHub</div>
+    <div style="font:500 11px 'Inter';color:oklch(60% 0.006 260)">or continue with email</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+<div style="width:100%;height:100vh;display:flex;font-family:'Inter',sans-serif;background:oklch(19% 0.014 260);background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:24px 24px;position:relative;overflow:hidden">
+
+  <div style="width:200px;flex-shrink:0;border-right:1px solid oklch(36% 0.02 260);padding:16px 12px;display:flex;flex-direction:column;gap:14px;background:oklch(17% 0.014 260)">
+    <div style="display:flex;align-items:center;gap:8px">
+      <img src="assets/novastructur-logo.png" style="width:28px;height:28px;border-radius:6px">
+      <span style="font:700 13px 'Plus Jakarta Sans';color:#f2fbfc;letter-spacing:.03em">NOVASTRUCTUR</span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid oklch(36% 0.02 260);border-radius:6px;padding:7px 10px;color:oklch(70% 0.006 260);font:500 12px 'Inter';cursor:pointer" onClick="{{ togglePalette }}">
+      <span>Search</span><span style="font:500 10px ui-monospace;background:oklch(24% 0.02 260);padding:2px 5px;border-radius:4px">⌘K</span>
+    </div>
+    <div style="background:oklch(22% 0.04 200);border:1px solid oklch(82% 0.15 200 / .7);box-shadow:0 0 14px oklch(82% 0.15 200 / .3);color:oklch(90% 0.11 200);border-radius:6px;padding:8px 12px;font:700 11px 'Plus Jakarta Sans';text-align:center;letter-spacing:.03em;cursor:pointer">+ NEW ISSUE</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.triage.bg }};border-left:{{ nav.triage.borderLeft }};color:{{ nav.triage.color }};font-weight:{{ nav.triage.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer;display:flex;justify-content:space-between" onClick="{{ goTriage }}"><span>TRIAGE</span><span style="background:oklch(30% 0.02 260);border-radius:8px;padding:0 6px;font-size:10px;color:oklch(85% 0.006 260)">{{ triageCount }}</span></div>
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.issues.bg }};border-left:{{ nav.issues.borderLeft }};color:{{ nav.issues.color }};font-weight:{{ nav.issues.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer" onClick="{{ goIssues }}">ISSUES</div>
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.board.bg }};border-left:{{ nav.board.borderLeft }};color:{{ nav.board.color }};font-weight:{{ nav.board.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer" onClick="{{ goBoard }}">BOARD</div>
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.cycles.bg }};border-left:{{ nav.cycles.borderLeft }};color:{{ nav.cycles.color }};font-weight:{{ nav.cycles.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer" onClick="{{ goCycles }}">CYCLES</div>
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.roadmap.bg }};border-left:{{ nav.roadmap.borderLeft }};color:{{ nav.roadmap.color }};font-weight:{{ nav.roadmap.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer" onClick="{{ goRoadmap }}">ROADMAP</div>
+      <div style="padding:7px 10px;border-radius:5px;background:{{ nav.docs.bg }};border-left:{{ nav.docs.borderLeft }};color:{{ nav.docs.color }};font-weight:{{ nav.docs.weight }};font-size:11.5px;font-family:'Inter';letter-spacing:.02em;cursor:pointer" onClick="{{ goDocs }}">DOCS</div>
+    </div>
+    <div style="margin-top:auto;font:500 9.5px ui-monospace;color:oklch(55% 0.006 260)">SYS.STATUS: NOMINAL</div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:auto">
+
+    <sc-if value="{{ isTriage }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">TRIAGE</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; new signals, not yet real_</div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:14px 20px;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ triageItems }}" as="t" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid oklch(30% 0.02 260);border-radius:8px">
+            <span style="font:500 12px 'Inter';color:#e6ebf2;flex:1">{{ t.title }}</span>
+            <span style="font:500 10px 'Inter';color:oklch(65% 0.006 260)">{{ t.source }}</span>
+            <span style="font:700 10px 'Plus Jakarta Sans';color:oklch(79% 0.16 150);border:1px solid oklch(79% 0.16 150 / .5);border-radius:6px;padding:5px 10px;cursor:pointer">Accept</span>
+            <span style="font:700 10px 'Plus Jakarta Sans';color:oklch(70% 0.006 260);border:1px solid oklch(40% 0.006 260);border-radius:6px;padding:5px 10px;cursor:pointer">Decline</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isIssues }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">ALL ISSUES</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; grouped by status_</div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:14px 20px">
+        <sc-for list="{{ issuesGroups }}" as="group" hint-placeholder-count="4">
+          <div style="margin-bottom:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ group.color }}"></span>
+              <span style="font:700 11px 'Plus Jakarta Sans';color:oklch(80% 0.006 260);letter-spacing:.06em">{{ group.name }} · {{ group.items.length }}</span>
+            </div>
+            <sc-for list="{{ group.items }}" as="issue" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid oklch(30% 0.02 260);border-radius:8px;margin-bottom:6px;cursor:pointer" onClick="{{ issue.open }}">
+                <span style="width:7px;height:7px;border-radius:50%;background:{{ issue.priorityColor }};flex-shrink:0"></span>
+                <span style="font:600 9.5px ui-monospace;color:oklch(65% 0.006 260);flex-shrink:0">{{ issue.id }}</span>
+                <span style="font:500 12px 'Inter';color:#e6ebf2;flex:1">{{ issue.title }}</span>
+                <span style="font:600 9px 'Inter';color:oklch(75% 0.1 260);background:oklch(28% 0.02 260);border-radius:10px;padding:2px 8px">{{ issue.label }}</span>
+                <sc-if value="{{ issue.avatarColor }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:20px;height:20px;border-radius:50%;background:{{ issue.avatarColor }};color:#0c0e12;font:700 9px 'Inter';display:flex;align-items:center;justify-content:center">{{ issue.assignee }}</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">SPRINT BOARD</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; tracking active threads_</div>
+      </div>
+      <div style="flex:1;display:flex;gap:10px;padding:14px;overflow:auto">
+        <sc-for list="{{ boardColumns }}" as="col" hint-placeholder-count="5">
+          <div style="width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:8px">
+            <div style="font:700 10.5px 'Plus Jakarta Sans';color:{{ col.color }};letter-spacing:.06em">{{ col.name }} · {{ col.items.length }}</div>
+            <sc-for list="{{ col.items }}" as="issue" hint-placeholder-count="2">
+              <div style="background:oklch(23% 0.02 260);border:1px solid oklch(36% 0.02 260);border-radius:8px;padding:8px;cursor:pointer" onClick="{{ issue.open }}">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font:600 9.5px ui-monospace;color:oklch(65% 0.006 260)">{{ issue.id }}</span>
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ issue.priorityColor }}"></span>
+                </div>
+                <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:4px">{{ issue.title }}</div>
+                <sc-if value="{{ issue.avatarColor }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+                    <span style="width:18px;height:18px;border-radius:50%;background:{{ issue.avatarColor }};color:#0c0e12;font:700 8px 'Inter';display:flex;align-items:center;justify-content:center">{{ issue.assignee }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCycles }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">CYCLE 14</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; the one where we actually ship_</div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:16px">
+        <div style="background:oklch(23% 0.02 260);border:1px solid oklch(30% 0.02 260);border-radius:10px;padding:16px;max-width:480px">
+          <div style="display:flex;justify-content:space-between;font:600 11px 'Inter';color:oklch(75% 0.006 260)"><span>Sep 1 – Sep 14</span><span>11 / 18 done</span></div>
+          <div style="height:6px;border-radius:3px;background:oklch(30% 0.02 260);margin-top:10px;overflow:hidden">
+            <div style="height:100%;width:61%;background:oklch(82% 0.15 200);box-shadow:0 0 8px oklch(82% 0.15 200 / .5)"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;max-width:480px">
+          <div style="display:flex;justify-content:space-between;padding:9px 12px;border:1px solid oklch(30% 0.02 260);border-radius:8px;opacity:.6">
+            <span style="font:500 12px 'Inter';color:#e6ebf2">Cycle 13 — shipped, mostly</span><span style="font:500 10px 'Inter';color:oklch(65% 0.006 260)">Aug 18 – Aug 31</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:9px 12px;border:1px solid oklch(30% 0.02 260);border-radius:8px;opacity:.6">
+            <span style="font:500 12px 'Inter';color:#e6ebf2">Cycle 12 — the migration one</span><span style="font:500 10px 'Inter';color:oklch(65% 0.006 260)">Aug 4 – Aug 17</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:9px 12px;border:1px dashed oklch(40% 0.006 260);border-radius:8px">
+            <span style="font:500 12px 'Inter';color:oklch(75% 0.006 260)">Cycle 15 — up next</span><span style="font:500 10px 'Inter';color:oklch(65% 0.006 260)">Sep 15 – Sep 28</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRoadmap }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">ROADMAP</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; promises, hopefully kept_</div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:20px;display:flex;gap:16px">
+        <sc-for list="{{ roadmapQuarters }}" as="q" hint-placeholder-count="3">
+          <div style="width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:8px">
+            <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(75% 0.006 260);letter-spacing:.06em">{{ q.name }}</div>
+            <sc-for list="{{ q.items }}" as="it" hint-placeholder-count="2">
+              <div style="background:oklch(23% 0.02 260);border:1px solid oklch(30% 0.02 260);border-left:3px solid {{ it.color }};border-radius:8px;padding:10px">
+                <div style="font:500 12px 'Inter';color:#e6ebf2">{{ it.title }}</div>
+                <div style="font:600 9px 'Plus Jakarta Sans';color:{{ it.color }};margin-top:5px;letter-spacing:.04em">{{ it.status }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDocs }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+        <div style="font:800 19px 'Plus Jakarta Sans';color:#f2fbfc">DOCS</div>
+        <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; the truth, occasionally up to date_</div>
+      </div>
+      <div style="flex:1;display:flex;overflow:hidden">
+        <div style="width:200px;flex-shrink:0;border-right:1px solid oklch(30% 0.02 260);padding:14px;display:flex;flex-direction:column;gap:2px">
+          <sc-for list="{{ docsTree }}" as="d" hint-placeholder-count="5">
+            <div style="padding:6px 10px 6px {{ d.paddingLeft }};border-radius:6px;font-size:12px;font-family:'Inter';font-weight:{{ d.weight }};color:{{ d.color }};background:{{ d.bg }};cursor:pointer">{{ d.title }}</div>
+          </sc-for>
+        </div>
+        <div style="flex:1;padding:24px;overflow:auto">
+          <div style="font:800 16px 'Plus Jakarta Sans';color:#f2fbfc;margin-bottom:10px">Architecture</div>
+          <div style="font:400 13px/1.6 'Inter';color:oklch(80% 0.006 260);max-width:560px">NovaStructur runs on a tRPC API over Prisma, with a git-bridge worker that mirrors issue state into branch names and PR checks. The MCP server exposes the same actions to AI agents, so triage can happen from a terminal as easily as a browser.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260);display:flex;align-items:center;gap:10px">
+        <span style="cursor:pointer;color:oklch(75% 0.006 260);font:600 15px 'Inter'" onClick="{{ closeIssue }}">←</span>
+        <div style="display:flex;flex-direction:column;gap:4px;max-width:600px">
+          <div style="font:800 18px 'Plus Jakarta Sans';color:#f2fbfc">{{ activeIssue.id }} — {{ activeIssue.title }}</div>
+          <div style="font:500 11.5px ui-monospace;color:{{ activeIssue.statusColor }}">{{ activeIssue.status }}</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:20px;display:flex;gap:24px">
+        <div style="flex:1;max-width:560px;display:flex;flex-direction:column;gap:18px">
+          <div style="font:400 13px/1.6 'Inter';color:oklch(80% 0.006 260)">Reported after three separate people hit the same wall in one afternoon. Worth a look before it becomes the thing everyone quietly works around.</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(75% 0.006 260);letter-spacing:.06em">COMMENTS</div>
+            <div style="background:oklch(23% 0.02 260);border:1px solid oklch(30% 0.02 260);border-radius:8px;padding:10px">
+              <div style="font:600 11px 'Inter';color:#e6ebf2">Jamie S.</div>
+              <div style="font:400 12px/1.5 'Inter';color:oklch(75% 0.006 260);margin-top:4px">Pretty sure this is the runner pool, not the tests. Bumping concurrency now.</div>
+            </div>
+            <div style="background:oklch(23% 0.02 260);border:1px solid oklch(30% 0.02 260);border-radius:8px;padding:10px">
+              <div style="font:600 11px 'Inter';color:#e6ebf2">Tunde K.</div>
+              <div style="font:400 12px/1.5 'Inter';color:oklch(75% 0.006 260);margin-top:4px">Confirmed. Also renamed the job so the Slack alert stops sounding like a fire.</div>
+            </div>
+          </div>
+        </div>
+        <div style="width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:14px">
+          <div>
+            <div style="font:700 10px 'Plus Jakarta Sans';color:oklch(65% 0.006 260);letter-spacing:.06em;margin-bottom:5px">PRIORITY</div>
+            <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:{{ activeIssue.priorityColor }}"></span><span style="font:500 12px 'Inter';color:#e6ebf2">{{ activeIssue.priority }}</span></div>
+          </div>
+          <sc-if value="{{ activeIssue.assignee }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font:700 10px 'Plus Jakarta Sans';color:oklch(65% 0.006 260);letter-spacing:.06em;margin-bottom:5px">ASSIGNEE</div>
+              <span style="width:18px;height:18px;border-radius:50%;background:{{ activeIssue.avatarColor }};color:#0c0e12;font:700 8px 'Inter';display:flex;align-items:center;justify-content:center">{{ activeIssue.assignee }}</span>
+            </div>
+          </sc-if>
+          <div>
+            <div style="font:700 10px 'Plus Jakarta Sans';color:oklch(65% 0.006 260);letter-spacing:.06em;margin-bottom:5px">LABEL</div>
+            <span style="font:600 9px 'Inter';color:oklch(75% 0.1 260);background:oklch(28% 0.02 260);border-radius:10px;padding:2px 8px">{{ activeIssue.label }}</span>
+          </div>
+          <div>
+            <div style="font:700 10px 'Plus Jakarta Sans';color:oklch(65% 0.006 260);letter-spacing:.06em;margin-bottom:5px">GITHUB</div>
+            <div style="font:500 11px ui-monospace;color:oklch(82% 0.15 200)">PR pending</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <sc-if value="{{ paletteOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding-top:120px" onClick="{{ closePalette }}">
+      <div style="width:520px;background:oklch(17% 0.014 260);border:1px solid oklch(36% 0.02 260);border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,.5);overflow:hidden" onClick="{{ stop }}">
+        <div style="padding:14px 16px;border-bottom:1px solid oklch(30% 0.02 260)">
+          <span style="font:500 13px 'Inter';color:oklch(60% 0.006 260)">Type a command or search…</span>
+        </div>
+        <div style="padding:6px;display:flex;flex-direction:column;gap:2px">
+          <div style="padding:9px 12px;border-radius:6px;font:500 12px 'Inter';color:#e6ebf2;display:flex;gap:8px"><span style="color:oklch(82% 0.15 200)">&gt;</span> Create new issue</div>
+          <div style="padding:9px 12px;border-radius:6px;font:500 12px 'Inter';color:#e6ebf2;display:flex;gap:8px"><span style="color:oklch(82% 0.15 200)">&gt;</span> Go to Board</div>
+          <div style="padding:9px 12px;border-radius:6px;font:500 12px 'Inter';color:#e6ebf2;display:flex;gap:8px"><span style="color:oklch(82% 0.15 200)">&gt;</span> Go to Roadmap</div>
+        </div>
+        <div style="padding:10px 16px;border-top:1px solid oklch(30% 0.02 260);font:500 10px 'Inter';color:oklch(55% 0.006 260)">↑↓ navigate · ↵ select · esc close</div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { loggedIn: false, page: 'board', paletteOpen: false, activeIssue: null };
+
+  login = () => this.setState({ loggedIn: true });
+  goPage = (p) => this.setState({ page: p, activeIssue: null, paletteOpen: false });
+  openIssue = (issue) => this.setState({ activeIssue: issue, paletteOpen: false });
+  closeIssue = () => this.setState({ activeIssue: null });
+  togglePalette = () => this.setState((s) => ({ paletteOpen: !s.paletteOpen }));
+  closePalette = () => this.setState({ paletteOpen: false });
+  stop = (e) => e.stopPropagation();
+
+  priorityColor(p) {
+    return { Urgent: 'oklch(70% 0.19 25)', High: 'oklch(80% 0.17 80)', Medium: 'oklch(82% 0.15 200)', Low: 'oklch(80% 0.006 260)' }[p];
+  }
+  avatarColor(initials) {
+    return { AR: 'oklch(75% 0.13 340)', JS: 'oklch(75% 0.12 20)', TK: 'oklch(75% 0.13 250)', MV: 'oklch(75% 0.13 150)' }[initials] || 'oklch(75% 0.02 260)';
+  }
+  statusColor(s) {
+    return { Backlog: 'oklch(80% 0.006 260)', Todo: 'oklch(82% 0.15 200)', 'In Progress': 'oklch(82% 0.17 80)', 'In Review': 'oklch(78% 0.17 330)', Done: 'oklch(79% 0.16 150)' }[s];
+  }
+  makeIssue(id, title, status, priority, assignee, label) {
+    return {
+      id, title, status, priority, label, assignee,
+      priorityColor: this.priorityColor(priority),
+      statusColor: this.statusColor(status),
+      avatarColor: assignee ? this.avatarColor(assignee) : null,
+      open: () => this.openIssue({ id, title, status, priority, assignee, label, statusColor: this.statusColor(status), priorityColor: this.priorityColor(priority), avatarColor: assignee ? this.avatarColor(assignee) : null }),
+    };
+  }
+
+  renderVals() {
+    const nav = {};
+    ['triage', 'issues', 'board', 'cycles', 'roadmap', 'docs'].forEach((p) => {
+      const active = this.state.page === p && !this.state.activeIssue;
+      nav[p] = {
+        bg: active ? 'oklch(26% 0.04 200)' : 'transparent',
+        color: active ? 'oklch(90% 0.11 200)' : 'oklch(80% 0.006 260)',
+        borderLeft: active ? '2px solid oklch(82% 0.15 200)' : '2px solid transparent',
+        weight: active ? 700 : 600,
+      };
+    });
+
+    const allIssues = [
+      this.makeIssue('ENG-142', 'Rename "Uncategorized" to something a human would say', 'Backlog', 'Low', null, 'polish'),
+      this.makeIssue('ENG-118', 'Docs sync is lying to us again', 'Backlog', 'Medium', null, 'docs'),
+      this.makeIssue('ENG-151', 'Onboarding flow forgets you exist', 'Todo', 'High', 'AR', 'frontend'),
+      this.makeIssue('ENG-160', 'CI is now faster than my patience', 'In Progress', 'Urgent', 'JS', 'infra'),
+      this.makeIssue('ENG-163', 'Add confetti on ship', 'In Progress', 'Low', 'TK', 'delight'),
+      this.makeIssue('ENG-155', "Dark mode: everything's dark except the bugs", 'In Review', 'Medium', 'MV', 'frontend'),
+      this.makeIssue('ENG-140', 'Cycle burndown chart burns morale', 'Done', 'Low', 'AR', 'reports'),
+    ];
+
+    const statuses = ['Backlog', 'Todo', 'In Progress', 'In Review', 'Done'];
+    const boardColumns = statuses.map((s) => ({ name: s, color: this.statusColor(s), items: allIssues.filter((i) => i.status === s) }));
+    const issuesGroups = boardColumns.filter((c) => c.items.length);
+
+    const triageItems = [
+      { id: 'T-1', title: 'Slack bot posts issue links twice', source: 'via Slack' },
+      { id: 'T-2', title: "New hire can't find the roadmap", source: 'via Email' },
+      { id: 'T-3', title: 'Someone requested dark mode... again', source: 'via GitHub' },
+      { id: 'T-4', title: 'API rate-limit emails look scary', source: 'via Sentry' },
+    ];
+
+    const roadmapQuarters = [
+      { name: 'Q3 2026', items: [{ title: 'AI code review companion', status: 'In Progress' }, { title: 'Multi-repo triage', status: 'Todo' }] },
+      { name: 'Q4 2026', items: [{ title: 'Roadmap timeline v2', status: 'Backlog' }, { title: 'Docs live-sync', status: 'Todo' }] },
+      { name: 'Q1 2027', items: [{ title: 'Mobile companion app', status: 'Backlog' }] },
+    ].map((q) => ({ ...q, items: q.items.map((it) => ({ ...it, color: this.statusColor(it.status) })) }));
+
+    const docsTree = [
+      { title: 'Getting Started' },
+      { title: 'Architecture', active: true },
+      { title: 'Git Bridge', indent: true },
+      { title: 'MCP Server', indent: true },
+      { title: 'Contributing' },
+    ].map((d) => ({
+      title: d.title,
+      paddingLeft: d.indent ? '22px' : '10px',
+      color: d.active ? '#f2fbfc' : 'oklch(75% 0.006 260)',
+      bg: d.active ? 'oklch(26% 0.02 260)' : 'transparent',
+      weight: d.active ? 700 : 500,
+    }));
+
+    const showDetail = !!this.state.activeIssue;
+    const page = this.state.page;
+
+    return {
+      loggedIn: this.state.loggedIn,
+      loggedOut: !this.state.loggedIn,
+      login: this.login,
+      paletteOpen: this.state.paletteOpen,
+      togglePalette: this.togglePalette,
+      closePalette: this.closePalette,
+      stop: this.stop,
+      nav,
+      goTriage: () => this.goPage('triage'),
+      goIssues: () => this.goPage('issues'),
+      goBoard: () => this.goPage('board'),
+      goCycles: () => this.goPage('cycles'),
+      goRoadmap: () => this.goPage('roadmap'),
+      goDocs: () => this.goPage('docs'),
+      triageCount: triageItems.length,
+      isTriage: !showDetail && page === 'triage',
+      isIssues: !showDetail && page === 'issues',
+      isBoard: !showDetail && page === 'board',
+      isCycles: !showDetail && page === 'cycles',
+      isRoadmap: !showDetail && page === 'roadmap',
+      isDocs: !showDetail && page === 'docs',
+      showDetail,
+      activeIssue: this.state.activeIssue,
+      closeIssue: this.closeIssue,
+      boardColumns,
+      issuesGroups,
+      triageItems,
+      roadmapQuarters,
+      docsTree,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

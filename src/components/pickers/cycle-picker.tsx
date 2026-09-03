@@ -48,7 +48,7 @@ export function CyclePicker({
     <Dropdown
       align="right"
       trigger={
-        <span className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-neutral-500 hover:bg-neutral-100">
+        <span className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-ns-text-faint hover:bg-white/5">
           <Repeat className="h-3 w-3" />
           {current ? cycleLabel(current) : "Backlog"}
         </span>

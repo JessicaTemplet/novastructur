@@ -39,27 +39,27 @@ export function SubIssues({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <h3 className="font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
           Sub-issues {subIssues.length > 0 && `(${subIssues.length})`}
         </h3>
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700"
+          className="flex items-center gap-1 text-xs text-ns-text-faint hover:text-ns-text-dim"
         >
           <Plus className="h-3 w-3" /> Add
         </button>
       </div>
 
-      <div className="rounded-md border border-neutral-100">
+      <div className="rounded-md border border-ns-border">
         {subIssues.map((sub) => (
           <Link
             key={sub.id}
             href={`/issue/${sub.identifier}`}
-            className="flex items-center gap-2 border-b border-neutral-100 px-2.5 py-1.5 text-sm last:border-b-0 hover:bg-neutral-50"
+            className="flex items-center gap-2 border-b border-ns-border px-2.5 py-1.5 text-sm last:border-b-0 hover:bg-white/5"
           >
             <StatusDot color={sub.state.color} />
-            <span className="font-mono text-xs text-neutral-400">{sub.identifier}</span>
-            <span className="flex-1 truncate text-neutral-800">{sub.title}</span>
+            <span className="font-mono text-xs text-ns-text-faint">{sub.identifier}</span>
+            <span className="flex-1 truncate text-ns-text-body">{sub.title}</span>
             {sub.assignee && <Avatar name={sub.assignee.name} color={sub.assignee.avatarColor} size={18} />}
           </Link>
         ))}
@@ -78,13 +78,13 @@ export function SubIssues({
               }}
               onBlur={() => !title.trim() && setAdding(false)}
               placeholder="Sub-issue title, press Enter"
-              className="w-full border-none text-sm outline-none placeholder:text-neutral-400"
+              className="w-full border-none bg-transparent text-sm text-ns-text-body outline-none placeholder:text-ns-text-faint"
             />
           </div>
         )}
 
         {subIssues.length === 0 && !adding && (
-          <div className="px-2.5 py-3 text-xs text-neutral-400">No sub-issues yet.</div>
+          <div className="px-2.5 py-3 text-xs text-ns-text-faint">No sub-issues yet.</div>
         )}
       </div>
     </div>

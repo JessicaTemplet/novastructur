@@ -36,24 +36,24 @@ function TreeNode({
   return (
     <div>
       <div
-        className={`group flex items-center gap-1 rounded-md py-1 pr-1.5 text-sm hover:bg-neutral-100 ${
-          selectedId === doc.id ? "bg-indigo-50 text-indigo-700" : "text-neutral-700"
+        className={`group flex items-center gap-1 rounded-md py-1 pr-1.5 text-sm hover:bg-white/5 ${
+          selectedId === doc.id ? "bg-white/5 font-semibold text-ns-text" : "text-ns-text-dim"
         }`}
         style={{ paddingLeft: 6 + depth * 14 }}
       >
         <button
           onClick={() => setExpanded((v) => !v)}
-          className={`shrink-0 text-neutral-400 ${kids.length === 0 ? "invisible" : ""}`}
+          className={`shrink-0 text-ns-text-faint ${kids.length === 0 ? "invisible" : ""}`}
         >
           <ChevronRight className={`h-3 w-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
         </button>
         <Link href={`/docs?id=${doc.id}`} className="flex min-w-0 flex-1 items-center gap-1.5">
-          <FileText className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
+          <FileText className="h-3.5 w-3.5 shrink-0 text-ns-text-faint" />
           <span className="truncate">{doc.title}</span>
         </Link>
         <button
           onClick={() => onCreateChild(doc.id)}
-          className="hidden shrink-0 text-neutral-400 hover:text-neutral-700 group-hover:block"
+          className="hidden shrink-0 text-ns-text-faint hover:text-ns-text-dim group-hover:block"
           title="New sub-page"
         >
           <Plus className="h-3 w-3" />
@@ -87,7 +87,7 @@ export function DocTree({
   const roots = childrenByParent.get(null) ?? [];
 
   if (roots.length === 0) {
-    return <div className="px-2 py-3 text-xs text-neutral-400">No pages yet.</div>;
+    return <div className="px-2 py-3 text-xs text-ns-text-faint">No pages yet.</div>;
   }
 
   return (

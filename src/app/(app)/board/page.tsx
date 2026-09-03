@@ -1,28 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/trpc/react";
 import { KanbanBoard } from "@/components/kanban/kanban-board";
 
 export default function BoardPage() {
   const { data: teams = [] } = api.team.list.useQuery();
   const [teamId, setTeamId] = useState<string>("");
+  const activeTeamId = teamId || teams[0]?.id || "";
 
-  useEffect(() => {
-    if (!teamId && teams.length > 0) setTeamId(teams[0]!.id);
-  }, [teams, teamId]);
-
-  const activeTeam = teams.find((t) => t.id === teamId);
+  const activeTeam = teams.find((t) => t.id === activeTeamId);
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3">
-        <h1 className="text-sm font-semibold text-neutral-900">Board</h1>
+      <div className="flex items-center justify-between border-b border-ns-border px-4 py-3">
+        <h1 className="font-display text-sm font-bold tracking-wide text-ns-text">Board</h1>
         {teams.length > 1 && (
           <select
-            value={teamId}
+            value={activeTeamId}
             onChange={(e) => setTeamId(e.target.value)}
-            className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
+            className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-dim"
           >
             {teams.map((t) => (
               <option key={t.id} value={t.id}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Zap } from "lucide-react";
 import { api } from "@/trpc/react";
 import { PRIORITY_META, type Priority } from "@/lib/issue-meta";
@@ -36,17 +36,15 @@ export default function AutomationSettingsPage() {
   const [actionLabelId, setActionLabelId] = useState("");
 
   const { data: teams = [] } = api.team.list.useQuery();
-  useEffect(() => {
-    if (!teamId && teams.length > 0) setTeamId(teams[0]!.id);
-  }, [teams, teamId]);
+  const activeTeamId = teamId || teams[0]?.id || "";
 
-  const activeTeam = teams.find((t) => t.id === teamId);
+  const activeTeam = teams.find((t) => t.id === activeTeamId);
   const states = activeTeam?.workflowStates ?? [];
   const { data: labels = [] } = api.label.list.useQuery();
   const { data: members = [] } = api.user.listOrgMembers.useQuery();
   const utils = api.useUtils();
 
-  const { data: rules = [] } = api.automation.list.useQuery({ teamId }, { enabled: !!teamId });
+  const { data: rules = [] } = api.automation.list.useQuery({ teamId: activeTeamId }, { enabled: !!activeTeamId });
 
   const create = api.automation.create.useMutation({
     onSuccess: () => {
@@ -88,9 +86,9 @@ export default function AutomationSettingsPage() {
   }
 
   function submit() {
-    if (!teamId || !name.trim()) return;
+    if (!activeTeamId || !name.trim()) return;
     create.mutate({
-      teamId,
+      teamId: activeTeamId,
       name: name.trim(),
       trigger,
       triggerStateId: trigger === "STATE_CHANGED" ? triggerStateId : undefined,
@@ -109,7 +107,7 @@ export default function AutomationSettingsPage() {
         <h1 className="text-lg font-semibold text-neutral-900">Automation</h1>
         {teams.length > 1 && (
           <select
-            value={teamId}
+            value={activeTeamId}
             onChange={(e) => setTeamId(e.target.value)}
             className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
           >

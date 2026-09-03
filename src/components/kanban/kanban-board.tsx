@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -26,14 +26,33 @@ function computeSortOrder(items: { sortOrder: number }[], index: number) {
   return (prev + next) / 2;
 }
 
+// A cheap content fingerprint of what actually determines column layout,
+// so a background refetch that returns an equal-but-new array reference
+// doesn't count as a change (see below).
+function columnsSignature(issues: IssueListItem[], states: WorkflowState[]): string {
+  return (
+    states.map((s) => s.id).join(",") +
+    "|" +
+    issues.map((i) => `${i.id}:${i.state.id}:${i.sortOrder}`).join(",")
+  );
+}
+
 export function KanbanBoard({ teamId, states }: { teamId: string; states: WorkflowState[] }) {
   const utils = api.useUtils();
   const { data: issues = [] } = api.issue.list.useQuery({ teamId, parentId: null });
   const [columns, setColumns] = useState<Record<string, IssueListItem[]>>({});
   const [dragging, setDragging] = useState(false);
+  const [syncedSignature, setSyncedSignature] = useState("");
 
-  useEffect(() => {
-    if (dragging) return;
+  // Rebuild columns from the server-driven issues/states whenever they
+  // meaningfully change, skipped while a drag is in flight so this doesn't
+  // clobber the optimistic reorder handleDragEnd below makes before the
+  // mutation settles. This runs during render, adjusting state in response
+  // to a prop/query change, not in an effect: an effect would commit and
+  // paint the stale layout for one frame first, then immediately redo it.
+  const signature = columnsSignature(issues, states);
+  if (signature !== syncedSignature && !dragging) {
+    setSyncedSignature(signature);
     const next: Record<string, IssueListItem[]> = {};
     for (const s of states) next[s.id] = [];
     for (const issue of issues) {
@@ -43,7 +62,7 @@ export function KanbanBoard({ teamId, states }: { teamId: string; states: Workfl
       next[key]!.sort((a, b) => a.sortOrder - b.sortOrder);
     }
     setColumns(next);
-  }, [issues, states, dragging]);
+  }
 
   const listInput = { teamId, parentId: null };
   const update = api.issue.update.useMutation({

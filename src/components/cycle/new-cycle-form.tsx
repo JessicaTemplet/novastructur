@@ -44,40 +44,40 @@ export function NewCycleForm({
   };
 
   return (
-    <div className="flex items-center gap-2 border-b border-neutral-100 bg-neutral-50 px-4 py-2.5">
+    <div className="flex items-center gap-2 border-b border-ns-border bg-white/[.02] px-4 py-2.5">
       <input
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={`Cycle ${nextNumber}`}
-        className="w-32 rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-indigo-400"
+        className="w-32 rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70"
       />
       <input
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        className="rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-indigo-400"
+        className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none focus:border-ns-accent/70"
       />
-      <span className="text-xs text-neutral-400">to</span>
+      <span className="text-xs text-ns-text-faint">to</span>
       <input
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        className="rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-indigo-400"
+        className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none focus:border-ns-accent/70"
       />
       <div className="ml-auto flex items-center gap-2">
-        <button onClick={onClose} className="rounded-md px-2 py-1 text-xs text-neutral-500 hover:bg-neutral-100">
+        <button onClick={onClose} className="rounded-md px-2 py-1 text-xs text-ns-text-dim hover:bg-white/5">
           Cancel
         </button>
         <button
           onClick={submit}
           disabled={create.isPending}
-          className="rounded-md bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="rounded-md bg-ns-accent-bg px-2.5 py-1 text-xs font-bold text-ns-accent ring-1 ring-ns-accent/70 hover:brightness-110 disabled:opacity-50"
         >
           {create.isPending ? "Creating…" : "Start cycle"}
         </button>
       </div>
-      {create.isError && <span className="text-xs text-red-600">{create.error.message}</span>}
+      {create.isError && <span className="text-xs text-red-400">{create.error.message}</span>}
     </div>
   );
 }

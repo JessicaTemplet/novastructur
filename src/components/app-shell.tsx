@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { ListTodo, Kanban, Settings, Search, Plus, LogOut, GitBranch, Repeat, Inbox, X, FileText, Zap, Milestone } from "lucide-react";
@@ -89,14 +90,16 @@ export function AppShell({
     return (
       <Link
         href={href}
-        className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition ${
-          active ? "bg-indigo-50 text-indigo-700" : "text-neutral-600 hover:bg-neutral-100"
+        className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[11.5px] font-semibold tracking-wide uppercase transition border-l-2 ${
+          active
+            ? "bg-ns-accent-bg border-ns-accent text-ns-accent shadow-[0_0_14px_-4px_var(--color-ns-accent)]"
+            : "border-transparent text-ns-text-dim hover:bg-white/5"
         }`}
       >
-        <Icon className="h-4 w-4" />
-        <span className="flex-1">{label}</span>
+        <Icon className="h-3.5 w-3.5" />
+        <span className="flex-1 font-display">{label}</span>
         {!!badge && (
-          <span className="rounded-full bg-neutral-200 px-1.5 text-[10px] font-semibold text-neutral-600">
+          <span className="rounded-full bg-white/10 px-1.5 text-[10px] font-semibold normal-case text-ns-text-dim">
             {badge}
           </span>
         )}
@@ -105,33 +108,37 @@ export function AppShell({
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-neutral-50">
-      <aside className="flex w-56 shrink-0 flex-col border-r border-neutral-200 bg-white px-3 py-3">
-        <div className="mb-4 flex items-center justify-between gap-2 px-1">
+    <div className="flex h-screen w-full overflow-hidden bg-ns-bg">
+      <aside className="ns-grid-bg flex w-56 shrink-0 flex-col gap-3.5 overflow-y-auto border-r border-ns-border-strong bg-ns-bg-sidebar px-3 py-3">
+        <div className="flex items-center justify-between gap-2 px-1">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-indigo-600 text-xs font-semibold text-white">
-              N
-            </div>
-            <span className="text-sm font-semibold text-neutral-900">NovaStructur</span>
+            <Image
+              src="/assets/novastructur-logo.png"
+              alt=""
+              width={28}
+              height={28}
+              className="h-7 w-7 shrink-0 rounded-md drop-shadow-[0_0_8px_var(--color-ns-accent)]"
+            />
+            <span className="font-display text-[13px] font-bold tracking-wide text-ns-text">NOVASTRUCTUR</span>
           </div>
           <NotificationBell />
         </div>
 
         <button
           onClick={() => setPaletteOpen(true)}
-          className="mb-1 flex items-center justify-between rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm text-neutral-400 hover:border-neutral-300"
+          className="flex items-center justify-between rounded-md border border-ns-border-strong px-2.5 py-1.5 text-xs text-ns-text-dim hover:border-ns-accent/50"
         >
           <span className="flex items-center gap-2">
             <Search className="h-3.5 w-3.5" /> Search
           </span>
-          <kbd className="rounded bg-neutral-100 px-1 text-[10px]">⌘K</kbd>
+          <kbd className="rounded bg-white/10 px-1 font-mono text-[10px] text-ns-text-faint">⌘K</kbd>
         </button>
 
         <button
           onClick={() => setCreateOpen(true)}
-          className="mb-4 flex items-center gap-2 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+          className="flex items-center justify-center gap-2 rounded-md bg-ns-accent-bg px-2.5 py-1.5 font-display text-[11px] font-bold tracking-wide text-ns-accent shadow-[0_0_16px_-2px_var(--color-ns-accent)] ring-1 ring-ns-accent/70 hover:brightness-110"
         >
-          <Plus className="h-3.5 w-3.5" /> New issue
+          <Plus className="h-3.5 w-3.5" /> NEW ISSUE
         </button>
 
         <nav className="flex flex-col gap-0.5">
@@ -144,22 +151,22 @@ export function AppShell({
         </nav>
 
         {savedViews.length > 0 && (
-          <div className="mt-4">
-            <div className="px-2.5 pb-1 text-[11px] font-medium uppercase tracking-wide text-neutral-400">
+          <div>
+            <div className="px-2.5 pb-1 font-display text-[10px] font-bold uppercase tracking-wider text-ns-text-faint">
               Views
             </div>
             <div className="flex flex-col gap-0.5">
               {savedViews.map((v) => (
-                <div key={v.id} className="group flex items-center rounded-md hover:bg-neutral-100">
+                <div key={v.id} className="group flex items-center rounded-md hover:bg-white/5">
                   <Link
                     href={viewHref(v)}
-                    className="flex-1 truncate px-2.5 py-1.5 text-sm text-neutral-600"
+                    className="flex-1 truncate px-2.5 py-1.5 text-[12px] text-ns-text-dim"
                   >
                     {v.name}
                   </Link>
                   <button
                     onClick={() => deleteView.mutate({ id: v.id })}
-                    className="mr-1.5 hidden text-neutral-400 hover:text-red-600 group-hover:block"
+                    className="mr-1.5 hidden text-ns-text-faint hover:text-red-400 group-hover:block"
                     title="Delete view"
                   >
                     <X className="h-3 w-3" />
@@ -170,17 +177,17 @@ export function AppShell({
           </div>
         )}
 
-        <div className="mt-4">
-          <div className="px-2.5 pb-1 text-[11px] font-medium uppercase tracking-wide text-neutral-400">
+        <div>
+          <div className="px-2.5 pb-1 font-display text-[10px] font-bold uppercase tracking-wider text-ns-text-faint">
             Teams
           </div>
           <div className="flex flex-col gap-0.5">
             {teams.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-neutral-600"
+                className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[12px] text-ns-text-dim"
               >
-                <span className="flex h-4 w-4 items-center justify-center rounded bg-neutral-100 text-[9px] font-semibold text-neutral-500">
+                <span className="flex h-4 w-4 items-center justify-center rounded bg-white/10 font-mono text-[9px] font-semibold text-ns-text-faint">
                   {t.key.slice(0, 2)}
                 </span>
                 {t.name}
@@ -189,18 +196,18 @@ export function AppShell({
           </div>
         </div>
 
-        <div className="mt-auto flex flex-col gap-0.5 border-t border-neutral-100 pt-2">
+        <div className="mt-auto flex flex-col gap-0.5 border-t border-ns-border pt-2.5">
           {navItem("/settings/ai", "AI Settings", Settings)}
           {navItem("/settings/github", "GitHub", GitBranch)}
           {navItem("/settings/automation", "Automation", Zap)}
           <div className="flex items-center justify-between px-2.5 py-1.5">
-            <span className="flex items-center gap-2 text-sm text-neutral-600">
+            <span className="flex items-center gap-2 text-[12px] text-ns-text-dim">
               <Avatar name={user.name ?? user.email ?? "?"} color={user.avatarColor} size={20} />
               <span className="max-w-[100px] truncate">{user.name ?? user.email}</span>
             </span>
             <button
               onClick={() => signOut({ redirectTo: "/login" })}
-              className="text-neutral-400 hover:text-neutral-700"
+              className="text-ns-text-faint hover:text-ns-text"
               title="Sign out"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -211,12 +218,10 @@ export function AppShell({
 
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</main>
 
-      <CommandPalette
-        open={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
-        onCreateIssue={() => setCreateOpen(true)}
-      />
-      <CreateIssueModal open={createOpen} onClose={() => setCreateOpen(false)} teams={teams} />
+      {paletteOpen && (
+        <CommandPalette onClose={() => setPaletteOpen(false)} onCreateIssue={() => setCreateOpen(true)} />
+      )}
+      {createOpen && <CreateIssueModal onClose={() => setCreateOpen(false)} teams={teams} />}
     </div>
   );
 }

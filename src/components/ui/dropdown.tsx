@@ -44,7 +44,7 @@ export function Dropdown({
       </button>
       {open && (
         <div
-          className={`absolute z-40 mt-1 min-w-[160px] overflow-hidden rounded-md border border-neutral-200 bg-white py-1 shadow-lg ${
+          className={`absolute z-40 mt-1 min-w-[160px] overflow-hidden rounded-md border border-ns-border-strong bg-ns-bg-elevated py-1 shadow-lg shadow-black/40 ${
             align === "right" ? "right-0" : "left-0"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -69,8 +69,8 @@ export function DropdownItem({
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-neutral-50 ${
-        active ? "bg-neutral-50 font-medium" : ""
+      className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-ns-text-body hover:bg-white/5 ${
+        active ? "bg-white/5 font-medium text-ns-accent" : ""
       }`}
     >
       {children}

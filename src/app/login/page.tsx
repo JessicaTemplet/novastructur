@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
+import Image from "next/image";
 import { signIn } from "@/server/auth";
 
 export default async function LoginPage({
@@ -26,23 +27,30 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-neutral-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-lg font-semibold text-white">
-            N
-          </div>
-          <h1 className="text-xl font-semibold text-neutral-900">Sign in to NovaStructur</h1>
+    <div className="ns-grid-bg flex min-h-screen w-full items-center justify-center bg-ns-bg px-4">
+      <div className="flex w-full max-w-[360px] flex-col items-center gap-4.5 rounded-2xl border border-ns-border-strong bg-ns-bg-sidebar p-9 shadow-[0_0_40px_rgba(0,0,0,.4)]">
+        <Image
+          src="/assets/novastructur-logo.png"
+          alt="NovaStructur"
+          width={56}
+          height={56}
+          className="h-14 w-14 rounded-xl drop-shadow-[0_0_16px_var(--color-ns-accent)]"
+        />
+        <div className="text-center">
+          <h1 className="font-display text-xl font-extrabold tracking-wide text-ns-text">NOVASTRUCTUR</h1>
+          <p className="mt-1.5 text-[12.5px] font-medium text-ns-text-dim">
+            The tracker that stays out of your way.
+          </p>
         </div>
 
-        <form action={login} className="space-y-3 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+        <form action={login} className="flex w-full flex-col gap-3">
           {error && (
-            <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <div className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-[12.5px] text-red-300">
               Invalid email or password.
             </div>
           )}
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-neutral-700">
+            <label htmlFor="email" className="mb-1 block text-[12px] font-medium text-ns-text-dim">
               Email
             </label>
             <input
@@ -51,12 +59,12 @@ export default async function LoginPage({
               type="email"
               required
               autoFocus
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-md border border-ns-border-strong bg-white/[.03] px-3 py-2 text-[13px] text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70 focus:ring-1 focus:ring-ns-accent/40"
               placeholder="you@company.com"
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-1 block text-sm font-medium text-neutral-700">
+            <label htmlFor="password" className="mb-1 block text-[12px] font-medium text-ns-text-dim">
               Password
             </label>
             <input
@@ -64,21 +72,19 @@ export default async function LoginPage({
               name="password"
               type="password"
               required
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-md border border-ns-border-strong bg-white/[.03] px-3 py-2 text-[13px] text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70 focus:ring-1 focus:ring-ns-accent/40"
               placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
-            className="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+            className="mt-1 w-full rounded-md bg-ns-accent-bg py-2.5 font-display text-[13px] font-bold tracking-wide text-ns-accent shadow-[0_0_16px_-2px_var(--color-ns-accent)] ring-1 ring-ns-accent/70 transition hover:brightness-110"
           >
             Sign in
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-neutral-500">
-          Demo: lilith@acme.dev / password123
-        </p>
+        <p className="text-center text-[11px] text-ns-text-faint">Demo: lilith@acme.dev / password123</p>
       </div>
     </div>
   );

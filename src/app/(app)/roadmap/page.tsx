@@ -53,29 +53,29 @@ export default function RoadmapPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3">
-        <h1 className="text-sm font-semibold text-neutral-900">Roadmap</h1>
-        <p className="text-xs text-neutral-400">Epics plotted from creation to due date — no dependency graph, just a timeline.</p>
+      <div className="flex items-center justify-between border-b border-ns-border px-4 py-3">
+        <h1 className="font-display text-sm font-bold tracking-wide text-ns-text">Roadmap</h1>
+        <p className="text-xs text-ns-text-faint">Epics plotted from creation to due date — no dependency graph, just a timeline.</p>
       </div>
 
       <div className="flex-1 overflow-auto">
-        {isLoading && <div className="p-6 text-sm text-neutral-400">Loading…</div>}
+        {isLoading && <div className="p-6 text-sm text-ns-text-faint">Loading…</div>}
 
         {!isLoading && dated.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
-            <p className="text-sm font-medium text-neutral-500">No epics with a due date yet</p>
-            <p className="text-xs text-neutral-400">Give an epic a due date to place it on the roadmap.</p>
+            <p className="text-sm font-medium text-ns-text-dim">No epics with a due date yet</p>
+            <p className="text-xs text-ns-text-faint">Give an epic a due date to place it on the roadmap.</p>
           </div>
         )}
 
         {dated.length > 0 && (
           <div className="p-4">
             <div style={{ width: totalWidth + 40 }}>
-              <div className="relative h-7 border-b border-neutral-200">
+              <div className="relative h-7 border-b border-ns-border">
                 {months.map((m) => (
                   <div
                     key={m.label}
-                    className="absolute top-0 border-l border-neutral-100 pl-1.5 text-[11px] text-neutral-400"
+                    className="absolute top-0 border-l border-ns-border pl-1.5 text-[11px] text-ns-text-faint"
                     style={{ left: m.left }}
                   >
                     {m.label}
@@ -85,7 +85,7 @@ export default function RoadmapPage() {
 
               <div className="relative mt-2">
                 <div
-                  className="absolute top-0 bottom-0 w-px bg-indigo-300"
+                  className="absolute top-0 bottom-0 w-px bg-ns-accent/60"
                   style={{ left: todayLeft }}
                   title="Today"
                 />
@@ -108,7 +108,7 @@ export default function RoadmapPage() {
                       }}
                     >
                       <StatusDot color={epic.state.color} />
-                      <span className="truncate font-medium text-neutral-800">
+                      <span className="truncate font-medium text-ns-text-body">
                         {epic.identifier} {epic.title}
                       </span>
                     </Link>
@@ -120,8 +120,8 @@ export default function RoadmapPage() {
         )}
 
         {undated.length > 0 && (
-          <div className="border-t border-neutral-100 px-4 py-3">
-            <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+          <div className="border-t border-ns-border px-4 py-3">
+            <h3 className="mb-1.5 font-display text-[11px] font-bold uppercase tracking-wide text-ns-text-faint">
               No due date ({undated.length})
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -129,7 +129,7 @@ export default function RoadmapPage() {
                 <Link
                   key={epic.id}
                   href={`/issue/${epic.identifier}`}
-                  className="flex items-center gap-1.5 rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-50"
+                  className="flex items-center gap-1.5 rounded-md border border-ns-border-strong px-2 py-1 text-xs text-ns-text-dim hover:bg-white/5"
                 >
                   <StatusDot color={epic.state.color} />
                   {epic.identifier} {epic.title}

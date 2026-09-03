@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/trpc/react";
 
 type Provider = "NONE" | "OPENAI" | "ANTHROPIC" | "OPENAI_COMPATIBLE";
@@ -13,26 +13,36 @@ const PROVIDER_LABEL: Record<Provider, string> = {
 };
 
 export default function AiSettingsPage() {
+  const { data: settings, isLoading } = api.ai.getSettings.useQuery();
+
+  if (isLoading || !settings) {
+    return <div className="mx-auto max-w-lg px-6 py-8 text-sm text-neutral-500">Loading…</div>;
+  }
+
+  // Keyed remount on first load instead of an effect re-syncing form state
+  // from `settings`: nothing after this needs to re-seed from a fresh
+  // fetch, `update`/`clear` below already set local state directly from
+  // what was just saved, so a live re-sync would only risk clobbering an
+  // in-progress edit if `settings` happens to refetch in the background.
+  return <AiSettingsForm initialSettings={settings} />;
+}
+
+function AiSettingsForm({ initialSettings }: { initialSettings: { provider: Provider; model: string | null; baseUrl: string | null; hasKey: boolean } }) {
   const utils = api.useUtils();
-  const { data: settings } = api.ai.getSettings.useQuery();
 
-  const [provider, setProvider] = useState<Provider>("NONE");
+  const [provider, setProvider] = useState<Provider>(initialSettings.provider as Provider);
   const [apiKey, setApiKey] = useState("");
-  const [model, setModel] = useState("");
-  const [baseUrl, setBaseUrl] = useState("");
+  const [model, setModel] = useState(initialSettings.model ?? "");
+  const [baseUrl, setBaseUrl] = useState(initialSettings.baseUrl ?? "");
+  const [hasKey, setHasKey] = useState(initialSettings.hasKey);
   const [testResult, setTestResult] = useState<{ success: boolean; reply: string } | null>(null);
-
-  useEffect(() => {
-    if (settings) {
-      setProvider(settings.provider as Provider);
-      setModel(settings.model ?? "");
-      setBaseUrl(settings.baseUrl ?? "");
-    }
-  }, [settings]);
 
   const update = api.ai.updateSettings.useMutation({
     onSuccess: () => {
-      setApiKey("");
+      setApiKey((prevKey) => {
+        if (prevKey) setHasKey(true);
+        return "";
+      });
       void utils.ai.getSettings.invalidate();
     },
   });
@@ -42,6 +52,7 @@ export default function AiSettingsPage() {
       setApiKey("");
       setModel("");
       setBaseUrl("");
+      setHasKey(false);
       setTestResult(null);
       void utils.ai.getSettings.invalidate();
     },
@@ -78,13 +89,13 @@ export default function AiSettingsPage() {
           <>
             <div>
               <label className="mb-1 block text-xs font-medium text-neutral-500">
-                API key {settings?.hasKey && <span className="text-emerald-600">(configured — leave blank to keep)</span>}
+                API key {hasKey && <span className="text-emerald-600">(configured — leave blank to keep)</span>}
               </label>
               <input
                 type="password"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                placeholder={settings?.hasKey ? "••••••••••••" : "sk-..."}
+                placeholder={hasKey ? "••••••••••••" : "sk-..."}
                 className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm outline-none focus:border-indigo-400"
               />
             </div>
@@ -128,7 +139,7 @@ export default function AiSettingsPage() {
           >
             {update.isPending ? "Saving…" : "Save"}
           </button>
-          {settings?.hasKey && (
+          {hasKey && (
             <button
               onClick={() => test.mutate()}
               disabled={test.isPending}

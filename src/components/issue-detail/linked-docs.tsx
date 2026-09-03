@@ -40,12 +40,12 @@ export function LinkedDocs({ issueId, linkedDocs }: { issueId: string; linkedDoc
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <h3 className="font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
           Docs {linkedDocs.length > 0 && `(${linkedDocs.length})`}
         </h3>
         <button
           onClick={() => setAdding((v) => !v)}
-          className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700"
+          className="flex items-center gap-1 text-xs text-ns-text-faint hover:text-ns-text-dim"
         >
           <Plus className="h-3 w-3" /> Add
         </button>
@@ -59,22 +59,22 @@ export function LinkedDocs({ issueId, linkedDocs }: { issueId: string; linkedDoc
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Escape" && setAdding(false)}
             placeholder="Search docs or type a new title..."
-            className="w-full rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-indigo-400"
+            className="w-full rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70"
           />
           {query.trim() && (
-            <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
+            <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-md border border-ns-border-strong bg-ns-bg-elevated py-1 shadow-lg shadow-black/40">
               {matches.map((d) => (
                 <button
                   key={d.id}
                   onClick={() => link.mutate({ docId: d.id, issueId })}
-                  className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-left text-xs hover:bg-neutral-50"
+                  className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-left text-xs text-ns-text-body hover:bg-white/5"
                 >
-                  <FileText className="h-3 w-3 text-neutral-400" /> {d.title}
+                  <FileText className="h-3 w-3 text-ns-text-faint" /> {d.title}
                 </button>
               ))}
               <button
                 onClick={() => createAndLink.mutate({ title: query.trim() })}
-                className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-left text-xs text-indigo-600 hover:bg-indigo-50"
+                className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-left text-xs text-ns-accent hover:bg-ns-accent-bg"
               >
                 <Plus className="h-3 w-3" /> Create &quot;{query.trim()}&quot;
               </button>
@@ -83,16 +83,16 @@ export function LinkedDocs({ issueId, linkedDocs }: { issueId: string; linkedDoc
         </div>
       )}
 
-      {linkedDocs.length === 0 && !adding && <div className="text-xs text-neutral-400">No linked docs yet.</div>}
+      {linkedDocs.length === 0 && !adding && <div className="text-xs text-ns-text-faint">No linked docs yet.</div>}
 
       <div className="space-y-1">
         {linkedDocs.map((l) => (
           <div key={l.id} className="flex items-center gap-2 text-sm">
-            <FileText className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
-            <Link href={`/docs?id=${l.doc.id}`} className="truncate text-neutral-700 hover:underline">
+            <FileText className="h-3.5 w-3.5 shrink-0 text-ns-text-faint" />
+            <Link href={`/docs?id=${l.doc.id}`} className="truncate text-ns-text-body hover:underline">
               {l.doc.title}
             </Link>
-            <button onClick={() => unlink.mutate({ id: l.id })} className="ml-auto shrink-0 text-neutral-300 hover:text-red-500">
+            <button onClick={() => unlink.mutate({ id: l.id })} className="ml-auto shrink-0 text-ns-text-faint hover:text-red-400">
               <X className="h-3 w-3" />
             </button>
           </div>

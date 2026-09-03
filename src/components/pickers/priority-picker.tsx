@@ -28,7 +28,7 @@ export function PriorityPicker({ issueId, current }: { issueId: string; current:
   });
 
   return (
-    <Dropdown trigger={<span className="flex items-center rounded p-1 hover:bg-neutral-100"><PriorityIcon priority={current} className="h-3.5 w-3.5" /></span>}>
+    <Dropdown trigger={<span className="flex items-center rounded p-1 hover:bg-white/5"><PriorityIcon priority={current} className="h-3.5 w-3.5" /></span>}>
       {(close) => (
         <>
           {PRIORITY_ORDER.map((p) => (

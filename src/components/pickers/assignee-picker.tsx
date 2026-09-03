@@ -41,11 +41,11 @@ export function AssigneePicker({
     <Dropdown
       align="right"
       trigger={
-        <span className="flex items-center rounded p-0.5 hover:bg-neutral-100">
+        <span className="flex items-center rounded p-0.5 hover:bg-white/5">
           {current ? (
             <Avatar name={current.name} color={current.avatarColor} size={20} />
           ) : (
-            <User className="h-4 w-4 text-neutral-400" />
+            <User className="h-4 w-4 text-ns-text-faint" />
           )}
         </span>
       }
@@ -59,7 +59,7 @@ export function AssigneePicker({
               close();
             }}
           >
-            <User className="h-3.5 w-3.5 text-neutral-400" /> Unassigned
+            <User className="h-3.5 w-3.5 text-ns-text-faint" /> Unassigned
           </DropdownItem>
           {members.map((m) => (
             <DropdownItem

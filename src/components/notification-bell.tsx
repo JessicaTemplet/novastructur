@@ -25,8 +25,8 @@ export function NotificationBell() {
     <Dropdown
       align="right"
       trigger={
-        <span className="relative flex items-center rounded p-1.5 hover:bg-neutral-100">
-          <Bell className="h-4 w-4 text-neutral-500" />
+        <span className="relative flex items-center rounded p-1.5 hover:bg-white/5">
+          <Bell className="h-4 w-4 text-ns-text-dim" />
           {unreadCount > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-semibold text-white">
               {unreadCount > 9 ? "9+" : unreadCount}
@@ -37,14 +37,14 @@ export function NotificationBell() {
     >
       {(close) => (
         <div className="w-80">
-          <div className="flex items-center justify-between border-b border-neutral-100 px-3 py-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+          <div className="flex items-center justify-between border-b border-ns-border px-3 py-2">
+            <span className="font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
               Notifications
             </span>
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllRead.mutate()}
-                className="text-xs text-indigo-600 hover:underline"
+                className="text-xs text-ns-accent hover:underline"
               >
                 Mark all read
               </button>
@@ -52,7 +52,7 @@ export function NotificationBell() {
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 && (
-              <div className="px-3 py-6 text-center text-sm text-neutral-400">No notifications yet.</div>
+              <div className="px-3 py-6 text-center text-sm text-ns-text-faint">No notifications yet.</div>
             )}
             {notifications.map((n) => (
               <button
@@ -62,14 +62,14 @@ export function NotificationBell() {
                   close();
                   if (n.issue) router.push(`/issue/${n.issue.identifier}`);
                 }}
-                className={`flex w-full items-start gap-2 border-b border-neutral-50 px-3 py-2 text-left text-xs hover:bg-neutral-50 ${
-                  n.read ? "" : "bg-indigo-50/50"
+                className={`flex w-full items-start gap-2 border-b border-ns-border px-3 py-2 text-left text-xs hover:bg-white/5 ${
+                  n.read ? "" : "bg-ns-accent-bg/40"
                 }`}
               >
-                {!n.read && <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-500" />}
-                <span className={`flex-1 ${n.read ? "text-neutral-500" : "text-neutral-800"}`}>
+                {!n.read && <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ns-accent" />}
+                <span className={`flex-1 ${n.read ? "text-ns-text-dim" : "text-ns-text"}`}>
                   {n.message}
-                  <div className="mt-0.5 text-[10px] text-neutral-400">
+                  <div className="mt-0.5 text-[10px] text-ns-text-faint">
                     {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
                   </div>
                 </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Bookmark } from "lucide-react";
 import { api } from "@/trpc/react";
@@ -14,9 +14,18 @@ function paramsFromUrl() {
   return params.size > 0 ? params : null;
 }
 
+// Clicking a different saved view updates the URL's query params without
+// changing route (still "/"), so Next won't remount this page on its own.
+// Keying on the params string forces exactly that remount when they change,
+// which lets every filter's useState pick its initial value straight from
+// the new URL, no effect needed to re-sync them after the fact.
 export default function IssuesPage() {
-  const initial = paramsFromUrl();
   const searchParams = useSearchParams();
+  return <IssuesPageContent key={searchParams.toString()} />;
+}
+
+function IssuesPageContent() {
+  const initial = paramsFromUrl();
   const [teamId, setTeamId] = useState<string>(initial?.get("teamId") ?? "all");
   const [assigneeId, setAssigneeId] = useState<string>(initial?.get("assigneeId") ?? "all");
   const [priority, setPriority] = useState<string>(initial?.get("priority") ?? "all");
@@ -25,19 +34,6 @@ export default function IssuesPage() {
   const [savingView, setSavingView] = useState(false);
   const [viewName, setViewName] = useState("");
   const debouncedQuery = useDebouncedValue(query, 200);
-
-  // Re-seed filter state whenever the URL's query params change (e.g.
-  // clicking a different saved view) — the route itself doesn't change, so
-  // Next won't remount this page, and without this the URL updates but the
-  // visible filters silently don't.
-  useEffect(() => {
-    setTeamId(searchParams.get("teamId") ?? "all");
-    setAssigneeId(searchParams.get("assigneeId") ?? "all");
-    setPriority(searchParams.get("priority") ?? "all");
-    setLabelId(searchParams.get("labelId") ?? "all");
-    setQuery(searchParams.get("query") ?? "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
 
   const { data: teams = [] } = api.team.list.useQuery();
   const { data: members = [] } = api.user.listOrgMembers.useQuery();
@@ -84,19 +80,19 @@ export default function IssuesPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3">
-        <h1 className="text-sm font-semibold text-neutral-900">Issues</h1>
+      <div className="flex items-center justify-between border-b border-ns-border px-4 py-3">
+        <h1 className="font-display text-sm font-bold tracking-wide text-ns-text">Issues</h1>
         <div className="flex items-center gap-2">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search title, description, ID..."
-            className="w-52 rounded-md border border-neutral-200 px-2.5 py-1 text-xs outline-none focus:border-indigo-400"
+            className="w-52 rounded-md border border-ns-border-strong bg-white/[.03] px-2.5 py-1 text-xs text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70"
           />
           <select
             value={teamId}
             onChange={(e) => setTeamId(e.target.value)}
-            className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
+            className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-dim"
           >
             <option value="all">All teams</option>
             {teams.map((t) => (
@@ -108,7 +104,7 @@ export default function IssuesPage() {
           <select
             value={assigneeId}
             onChange={(e) => setAssigneeId(e.target.value)}
-            className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
+            className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-dim"
           >
             <option value="all">Everyone</option>
             <option value="unassigned">Unassigned</option>
@@ -121,7 +117,7 @@ export default function IssuesPage() {
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
+            className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-dim"
           >
             <option value="all">Any priority</option>
             {PRIORITY_ORDER.map((p) => (
@@ -133,7 +129,7 @@ export default function IssuesPage() {
           <select
             value={labelId}
             onChange={(e) => setLabelId(e.target.value)}
-            className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-600"
+            className="rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-dim"
           >
             <option value="all">Any label</option>
             {labels.map((l) => (
@@ -145,7 +141,7 @@ export default function IssuesPage() {
           <button
             onClick={() => setSavingView(true)}
             title="Save current filters as a view"
-            className="rounded-md p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+            className="rounded-md p-1.5 text-ns-text-faint hover:bg-white/5 hover:text-ns-text-dim"
           >
             <Bookmark className="h-3.5 w-3.5" />
           </button>
@@ -153,7 +149,7 @@ export default function IssuesPage() {
       </div>
 
       {savingView && (
-        <div className="flex items-center gap-2 border-b border-neutral-100 bg-neutral-50 px-4 py-2">
+        <div className="flex items-center gap-2 border-b border-ns-border bg-white/[.02] px-4 py-2">
           <input
             autoFocus
             value={viewName}
@@ -163,11 +159,11 @@ export default function IssuesPage() {
               if (e.key === "Escape") setSavingView(false);
             }}
             placeholder="View name, press Enter to save"
-            className="w-64 rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-indigo-400"
+            className="w-64 rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none placeholder:text-ns-text-faint focus:border-ns-accent/70"
           />
           <button
             onClick={() => setSavingView(false)}
-            className="rounded-md px-2 py-1 text-xs text-neutral-500 hover:bg-neutral-100"
+            className="rounded-md px-2 py-1 text-xs text-ns-text-dim hover:bg-white/5"
           >
             Cancel
           </button>
@@ -175,19 +171,19 @@ export default function IssuesPage() {
       )}
 
       <div className="flex-1 overflow-y-auto">
-        {isLoading && <div className="p-6 text-sm text-neutral-400">Loading…</div>}
+        {isLoading && <div className="p-6 text-sm text-ns-text-faint">Loading…</div>}
         {!isLoading && issues.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
-            <p className="text-sm font-medium text-neutral-500">No issues match these filters</p>
-            <p className="text-xs text-neutral-400">Press "C" to create one.</p>
+            <p className="text-sm font-medium text-ns-text-dim">No issues match these filters</p>
+            <p className="text-xs text-ns-text-faint">Press &quot;C&quot; to create one.</p>
           </div>
         )}
         {groups.map(({ state, items }) => (
           <div key={state.id}>
-            <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-neutral-100 bg-neutral-50 px-4 py-1.5 text-xs font-medium text-neutral-500">
+            <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-ns-border bg-ns-bg px-4 py-1.5 text-xs font-medium text-ns-text-dim">
               <span className="h-2 w-2 rounded-full" style={{ backgroundColor: state.color }} />
               {state.name}
-              <span className="text-neutral-400">{items.length}</span>
+              <span className="text-ns-text-faint">{items.length}</span>
             </div>
             {items.map((issue) => (
               <IssueRow key={issue.id} issue={issue} statusOptions={statesByTeam[issue.team.id] ?? []} />

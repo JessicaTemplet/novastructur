@@ -82,7 +82,7 @@ export function GithubLinks({ issue }: { issue: IssueWithGithubLinks }) {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <h3 className="font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
           GitHub {issue.githubLinks.length > 0 && `(${issue.githubLinks.length})`}
         </h3>
         <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ export function GithubLinks({ issue }: { issue: IssueWithGithubLinks }) {
             <button
               onClick={() => syncLinks.mutate({ issueId: issue.id })}
               disabled={syncLinks.isPending}
-              className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700"
+              className="flex items-center gap-1 text-xs text-ns-text-faint hover:text-ns-text-dim"
             >
               <RefreshCw className={`h-3 w-3 ${syncLinks.isPending ? "animate-spin" : ""}`} /> Sync
             </button>
@@ -99,17 +99,17 @@ export function GithubLinks({ issue }: { issue: IssueWithGithubLinks }) {
             onClick={() => (connection?.connected ? setAdding((v) => !v) : undefined)}
             disabled={!connection?.connected}
             title={connection?.connected ? undefined : "Connect GitHub in Settings → GitHub first"}
-            className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-1 text-xs text-ns-text-faint hover:text-ns-text-dim disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-3 w-3" /> Link PR
           </button>
         </div>
       </div>
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs text-neutral-400">
+      <div className="mb-2 flex items-center gap-1.5 text-xs text-ns-text-faint">
         <span>Branch:</span>
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 text-neutral-600">{branchName}</code>
-        <button onClick={copyBranchName} className="text-neutral-300 hover:text-neutral-600">
+        <code className="rounded bg-white/10 px-1.5 py-0.5 text-ns-text-dim">{branchName}</code>
+        <button onClick={copyBranchName} className="text-ns-text-faint hover:text-ns-text-dim">
           {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
         </button>
       </div>
@@ -121,25 +121,25 @@ export function GithubLinks({ issue }: { issue: IssueWithGithubLinks }) {
             onChange={(e) => setPrUrl(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && prUrl.trim() && linkPr.mutate({ issueId: issue.id, prUrl })}
             placeholder="https://github.com/owner/repo/pull/123"
-            className="w-64 rounded-md border border-neutral-200 px-2 py-1 text-xs outline-none"
+            className="w-64 rounded-md border border-ns-border-strong bg-white/[.03] px-2 py-1 text-xs text-ns-text-body outline-none placeholder:text-ns-text-faint"
           />
           <button
             onClick={() => linkPr.mutate({ issueId: issue.id, prUrl })}
             disabled={!prUrl.trim() || linkPr.isPending}
-            className="rounded-md bg-neutral-800 px-2 py-1 text-xs text-white disabled:opacity-40"
+            className="rounded-md bg-ns-accent-bg px-2 py-1 text-xs font-bold text-ns-accent ring-1 ring-ns-accent/70 disabled:opacity-40"
           >
             {linkPr.isPending ? "Linking…" : "Link"}
           </button>
-          {error && <span className="text-xs text-red-600">{error}</span>}
+          {error && <span className="text-xs text-red-400">{error}</span>}
         </div>
       )}
 
       {syncLinks.isError && (
-        <div className="mb-2 text-xs text-red-600">{syncLinks.error.message}</div>
+        <div className="mb-2 text-xs text-red-400">{syncLinks.error.message}</div>
       )}
 
       {issue.githubLinks.length === 0 && !adding && (
-        <div className="text-xs text-neutral-400">No linked pull requests yet.</div>
+        <div className="text-xs text-ns-text-faint">No linked pull requests yet.</div>
       )}
 
       <div className="space-y-1">
@@ -150,16 +150,16 @@ export function GithubLinks({ issue }: { issue: IssueWithGithubLinks }) {
               href={link.prUrl}
               target="_blank"
               rel="noreferrer"
-              className="flex min-w-0 items-center gap-1 truncate text-neutral-700 hover:underline"
+              className="flex min-w-0 items-center gap-1 truncate text-ns-text-body hover:underline"
             >
               <span className="truncate">
                 {link.repoOwner}/{link.repoName}#{link.prNumber} {link.prTitle}
               </span>
-              <ExternalLink className="h-3 w-3 shrink-0 text-neutral-300" />
+              <ExternalLink className="h-3 w-3 shrink-0 text-ns-text-faint" />
             </a>
             <button
               onClick={() => unlinkPr.mutate({ linkId: link.id })}
-              className="ml-auto shrink-0 text-neutral-300 hover:text-red-500"
+              className="ml-auto shrink-0 text-ns-text-faint hover:text-red-400"
             >
               <X className="h-3 w-3" />
             </button>

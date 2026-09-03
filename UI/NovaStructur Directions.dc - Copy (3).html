@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#eeece6;font-family:'Inter',sans-serif}
+.dv-turn{padding:40px 44px 60px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:700 15px/1.2 'Plus Jakarta Sans',sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:30px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 'Inter',sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.10);overflow:hidden}
+.dv-next{margin:22px 0 0;font:12px/1.5 'Inter',sans-serif;color:rgba(0,0,0,.5)}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Dark HUD direction</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Nightframe HUD — dark, neon, futuristic terminal</div>
+<div class="dv-card" style="width:1000px;height:640px;display:flex;font-family:'Inter',sans-serif;background:oklch(19% 0.014 260);background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:24px 24px">
+  <div style="width:190px;border-right:1px solid oklch(36% 0.02 260);padding:16px 12px;display:flex;flex-direction:column;gap:14px;background:oklch(17% 0.014 260)">
+    <div style="display:flex;align-items:center;gap:8px">
+      <img src="assets/novastructur-logo.png" style="width:28px;height:28px;border-radius:6px">
+      <span style="font:700 13px 'Plus Jakarta Sans';color:#f2fbfc;letter-spacing:.03em">NOVASTRUCTUR</span>
+    </div>
+    <div style="background:oklch(22% 0.04 200);border:1px solid oklch(82% 0.15 200 / .7);box-shadow:0 0 16px oklch(82% 0.15 200 / .4);color:oklch(90% 0.11 200);border-radius:6px;padding:8px 12px;font:700 11px 'Plus Jakarta Sans';text-align:center;letter-spacing:.04em">+ NEW ISSUE</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="padding:7px 10px;border-radius:5px;color:oklch(80% 0.006 260);font:600 11.5px 'Inter';letter-spacing:.02em">TRIAGE</div>
+      <div style="padding:7px 10px;border-radius:5px;color:oklch(80% 0.006 260);font:600 11.5px 'Inter';letter-spacing:.02em">ISSUES</div>
+      <div style="padding:7px 10px;border-radius:5px;background:oklch(26% 0.04 200);border-left:2px solid oklch(82% 0.15 200);color:oklch(90% 0.11 200);font:700 11.5px 'Inter';letter-spacing:.02em">BOARD</div>
+      <div style="padding:7px 10px;border-radius:5px;color:oklch(80% 0.006 260);font:600 11.5px 'Inter';letter-spacing:.02em">CYCLES</div>
+      <div style="padding:7px 10px;border-radius:5px;color:oklch(80% 0.006 260);font:600 11.5px 'Inter';letter-spacing:.02em">ROADMAP</div>
+      <div style="padding:7px 10px;border-radius:5px;color:oklch(80% 0.006 260);font:600 11.5px 'Inter';letter-spacing:.02em">DOCS</div>
+    </div>
+    <div style="margin-top:auto;font:500 9.5px ui-monospace;color:oklch(58% 0.02 260)">SYS.STATUS: NOMINAL</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(34% 0.02 260)">
+      <div style="font:800 18px 'Plus Jakarta Sans';color:#f2fbfc;letter-spacing:.02em">SPRINT BOARD</div>
+      <div style="font:500 11.5px ui-monospace;color:oklch(82% 0.15 200);margin-top:3px">&gt; tracking 6 active threads_</div>
+    </div>
+    <div style="flex:1;display:flex;gap:10px;padding:14px;overflow:hidden">
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 10.5px 'Plus Jakarta Sans';color:oklch(80% 0.006 260);letter-spacing:.06em">BACKLOG · 12</div>
+        <div style="background:oklch(23% 0.017 260);border:1px solid oklch(45% 0.006 260);border-radius:8px;padding:8px">
+          <div style="font:600 9.5px ui-monospace;color:oklch(70% 0.006 260)">ENG-142</div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">Rename "Uncategorized"</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 10.5px 'Plus Jakarta Sans';color:oklch(82% 0.15 200);letter-spacing:.06em">TODO · 9</div>
+        <div style="background:oklch(23% 0.025 200);border:1px solid oklch(82% 0.15 200 / .4);border-radius:8px;padding:8px">
+          <div style="font:600 9.5px ui-monospace;color:oklch(74% 0.13 200)">ENG-151</div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">Onboarding forgets you exist</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 10.5px 'Plus Jakarta Sans';color:oklch(82% 0.17 80);letter-spacing:.06em">IN PROGRESS · 5</div>
+        <div style="background:oklch(24% 0.025 80);border:1px solid oklch(82% 0.17 80 / .55);box-shadow:0 0 16px oklch(82% 0.17 80 / .25);border-radius:8px;padding:8px">
+          <div style="display:flex;justify-content:space-between"><span style="font:600 9.5px ui-monospace;color:oklch(77% 0.16 80)">ENG-160</span><span style="width:6px;height:6px;border-radius:50%;background:oklch(82% 0.17 80);box-shadow:0 0 8px oklch(82% 0.17 80)"></span></div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">CI beats my patience now</div>
+        </div>
+        <div style="background:oklch(24% 0.025 80);border:1px solid oklch(82% 0.17 80 / .35);border-radius:8px;padding:8px">
+          <div style="font:600 9.5px ui-monospace;color:oklch(77% 0.16 80)">ENG-163</div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">Add confetti on ship</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 10.5px 'Plus Jakarta Sans';color:oklch(78% 0.17 330);letter-spacing:.06em">IN REVIEW · 3</div>
+        <div style="background:oklch(23% 0.025 330);border:1px solid oklch(78% 0.17 330 / .45);border-radius:8px;padding:8px">
+          <div style="font:600 9.5px ui-monospace;color:oklch(73% 0.15 330)">ENG-155</div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">Dark mode, minus the bugs' hideout</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 10.5px 'Plus Jakarta Sans';color:oklch(79% 0.16 150);letter-spacing:.06em">DONE · 21</div>
+        <div style="background:oklch(22% 0.025 150);border:1px solid oklch(79% 0.16 150 / .35);border-radius:8px;padding:8px;opacity:.65">
+          <div style="font:600 9.5px ui-monospace;color:oklch(73% 0.14 150)">ENG-140</div>
+          <div style="font:500 11.5px 'Inter';color:#e6ebf2;margin-top:3px">Burndown burns morale too</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "go deeper on <a class="dv-oid" href="#2a">2a</a> across all screens" · "brighten the neon in <a class="dv-oid" href="#2a">2a</a>" · "pick one direction to build out fully"</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">NovaStructur — 4 directions (Board view)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Confetti Board — bright, cheerful, color-blocked</div>
+<div class="dv-card" style="width:1000px;height:640px;display:flex;font-family:'Inter',sans-serif;background:oklch(98% 0.01 80)">
+  <div style="width:190px;background:#fff;border-right:1px solid oklch(92% 0.01 80);padding:16px 12px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:8px;background:oklch(68% 0.19 40);display:flex;align-items:center;justify-content:center;color:#fff;font:800 13px 'Plus Jakarta Sans'">N</div>
+      <span style="font:700 14px 'Plus Jakarta Sans';color:#211a12">NovaStructur</span>
+    </div>
+    <div style="background:oklch(68% 0.19 40);color:#fff;border-radius:10px;padding:8px 12px;font:700 12px 'Plus Jakarta Sans';text-align:center">+ New issue</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="padding:7px 10px;border-radius:8px;color:#8a8073;font:600 12.5px 'Inter'">Triage</div>
+      <div style="padding:7px 10px;border-radius:8px;color:#8a8073;font:600 12.5px 'Inter'">Issues</div>
+      <div style="padding:7px 10px;border-radius:8px;background:oklch(93% 0.05 40);color:oklch(45% 0.16 40);font:700 12.5px 'Inter'">Board</div>
+      <div style="padding:7px 10px;border-radius:8px;color:#8a8073;font:600 12.5px 'Inter'">Cycles</div>
+      <div style="padding:7px 10px;border-radius:8px;color:#8a8073;font:600 12.5px 'Inter'">Roadmap</div>
+      <div style="padding:7px 10px;border-radius:8px;color:#8a8073;font:600 12.5px 'Inter'">Docs</div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(93% 0.01 80)">
+      <div style="font:800 19px 'Plus Jakarta Sans';color:#211a12">Sprint Board</div>
+      <div style="font:500 12px 'Inter';color:#a39a8b;margin-top:2px">6 things making progress, 40 pretending to</div>
+    </div>
+    <div style="flex:1;display:flex;gap:10px;padding:14px;overflow:hidden">
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:oklch(85% 0.02 260);color:oklch(38% 0.02 260);border-radius:20px;padding:4px 10px;font:700 10.5px 'Plus Jakarta Sans';width:fit-content">Backlog · 12</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(70% 0.02 260)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-142</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Rename "Uncategorized" to something a human would say</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(70% 0.02 260)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-118</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Docs sync is lying to us again</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:oklch(78% 0.15 250);color:#fff;border-radius:20px;padding:4px 10px;font:700 10.5px 'Plus Jakarta Sans';width:fit-content">Todo · 9</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(70% 0.15 250)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-151</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Onboarding flow forgets you exist</div>
+          <div style="display:flex;gap:4px;margin-top:6px"><span style="background:oklch(90% 0.08 250);color:oklch(40% 0.15 250);border-radius:20px;padding:2px 7px;font:700 9px 'Inter'">frontend</span></div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:oklch(78% 0.17 60);color:#fff;border-radius:20px;padding:4px 10px;font:700 10.5px 'Plus Jakarta Sans';width:fit-content">In Progress · 5</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(75% 0.17 60)">
+          <div style="display:flex;justify-content:space-between"><span style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-160</span><span style="width:8px;height:8px;border-radius:50%;background:oklch(60% 0.2 25)"></span></div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">CI is now faster than my patience</div>
+          <div style="display:flex;justify-content:flex-end;margin-top:6px"><span style="width:18px;height:18px;border-radius:50%;background:oklch(70% 0.15 340);color:#fff;font:700 8px 'Inter';display:flex;align-items:center;justify-content:center">JS</span></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(75% 0.17 60)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-163</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Add confetti on ship</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:oklch(70% 0.16 300);color:#fff;border-radius:20px;padding:4px 10px;font:700 10.5px 'Plus Jakarta Sans';width:fit-content">In Review · 3</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(68% 0.15 300)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-155</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Dark mode: everything is dark except the bugs</div>
+        </div>
+      </div>
+      <div style="width:150px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:oklch(74% 0.16 150);color:#fff;border-radius:20px;padding:4px 10px;font:700 10.5px 'Plus Jakarta Sans';width:fit-content">Done · 21</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:4px solid oklch(72% 0.15 150);opacity:.7">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-140</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Cycle burndown chart burns down morale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Clay Desk — soft, tactile, pastel claymorphism</div>
+<div class="dv-card" style="width:1000px;height:640px;display:flex;font-family:'Inter',sans-serif;background:oklch(96% 0.015 60)">
+  <div style="width:190px;padding:16px 12px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:10px;background:oklch(92% 0.05 40);box-shadow:inset 0 -2px 3px oklch(80% 0.05 40),0 2px 4px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;color:oklch(45% 0.13 40);font:800 13px 'Plus Jakarta Sans'">N</div>
+      <span style="font:700 14px 'Plus Jakarta Sans';color:#4a4238">NovaStructur</span>
+    </div>
+    <div style="background:oklch(97% 0.01 60);box-shadow:2px 4px 10px rgba(0,0,0,.06),inset 0 1px 0 #fff;border-radius:14px;padding:9px 12px;font:700 12px 'Plus Jakarta Sans';text-align:center;color:oklch(45% 0.1 40)">+ New issue</div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="padding:8px 12px;border-radius:12px;color:#8a7f6f;font:600 12.5px 'Inter'">Triage</div>
+      <div style="padding:8px 12px;border-radius:12px;color:#8a7f6f;font:600 12.5px 'Inter'">Issues</div>
+      <div style="padding:8px 12px;border-radius:12px;background:oklch(90% 0.05 40);box-shadow:inset 1px 1px 3px oklch(80% 0.05 40),inset -1px -1px 3px #fff;color:oklch(42% 0.13 40);font:700 12.5px 'Inter'">Board</div>
+      <div style="padding:8px 12px;border-radius:12px;color:#8a7f6f;font:600 12.5px 'Inter'">Cycles</div>
+      <div style="padding:8px 12px;border-radius:12px;color:#8a7f6f;font:600 12.5px 'Inter'">Roadmap</div>
+      <div style="padding:8px 12px;border-radius:12px;color:#8a7f6f;font:600 12.5px 'Inter'">Docs</div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;padding:16px 18px;gap:12px">
+    <div>
+      <div style="font:800 19px 'Plus Jakarta Sans';color:#3f382e">Sprint Board</div>
+      <div style="font:500 12px 'Inter';color:#a89c88;margin-top:2px">Soft landings for hard problems</div>
+    </div>
+    <div style="flex:1;display:flex;gap:12px;overflow:hidden">
+      <div style="width:148px;background:oklch(93% 0.02 260);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(45% 0.02 260)">Backlog</div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-142</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">Give the changelog some personality</div>
+        </div>
+      </div>
+      <div style="width:148px;background:oklch(92% 0.05 250);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(42% 0.13 250)">Todo</div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-151</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">Onboarding flow forgets you exist</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px"><span style="background:oklch(88% 0.06 250);color:oklch(40% 0.14 250);border-radius:20px;padding:2px 8px;font:700 9px 'Inter'">frontend</span><span style="width:18px;height:18px;border-radius:50%;background:oklch(75% 0.11 20);color:#fff;font:700 8px 'Inter';display:flex;align-items:center;justify-content:center">AR</span></div>
+        </div>
+      </div>
+      <div style="width:148px;background:oklch(90% 0.06 60);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(42% 0.13 60)">In Progress</div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-160</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">CI is now faster than my patience</div>
+        </div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-163</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">Add confetti on ship</div>
+        </div>
+      </div>
+      <div style="width:148px;background:oklch(89% 0.06 300);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(42% 0.13 300)">In Review</div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-155</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">Dark mode: everything's dark but the bugs</div>
+        </div>
+      </div>
+      <div style="width:148px;background:oklch(90% 0.06 150);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 11px 'Plus Jakarta Sans';color:oklch(40% 0.13 150)">Done</div>
+        <div style="background:#fdfcfa;border-radius:14px;padding:9px;box-shadow:2px 3px 8px rgba(0,0,0,.05),inset 0 1px 0 #fff;opacity:.75">
+          <div style="font:600 9.5px ui-monospace;color:#c3b8a6">ENG-140</div>
+          <div style="font:600 11.5px 'Inter';color:#4a4238;margin-top:3px">Cycle burndown burns morale too</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Signal Board — full-color status bands, dark rail</div>
+<div class="dv-card" style="width:1000px;height:640px;display:flex;font-family:'Inter',sans-serif;background:oklch(97% 0.01 80)">
+  <div style="width:190px;background:oklch(21% 0.015 270);padding:16px 12px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:7px;background:oklch(72% 0.18 340);display:flex;align-items:center;justify-content:center;color:#fff;font:800 13px 'Plus Jakarta Sans'">N</div>
+      <span style="font:700 14px 'Plus Jakarta Sans';color:#f2efe9">NovaStructur</span>
+    </div>
+    <div style="background:oklch(72% 0.18 340);color:#fff;border-radius:8px;padding:8px 12px;font:700 12px 'Plus Jakarta Sans';text-align:center">+ New issue</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="padding:7px 10px;border-radius:7px;color:#a9a4b3;font:600 12.5px 'Inter'">Triage</div>
+      <div style="padding:7px 10px;border-radius:7px;color:#a9a4b3;font:600 12.5px 'Inter'">Issues</div>
+      <div style="padding:7px 10px;border-radius:7px;background:oklch(30% 0.03 270);color:#fff;font:700 12.5px 'Inter'">Board</div>
+      <div style="padding:7px 10px;border-radius:7px;color:#a9a4b3;font:600 12.5px 'Inter'">Cycles</div>
+      <div style="padding:7px 10px;border-radius:7px;color:#a9a4b3;font:600 12.5px 'Inter'">Roadmap</div>
+      <div style="padding:7px 10px;border-radius:7px;color:#a9a4b3;font:600 12.5px 'Inter'">Docs</div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(92% 0.01 80)">
+      <div style="font:800 19px 'Plus Jakarta Sans';color:#20242c">Sprint Board</div>
+      <div style="font:500 12px 'Inter';color:#9691a0;margin-top:2px">Color tells the story before you read a word</div>
+    </div>
+    <div style="flex:1;display:flex;overflow:hidden">
+      <div style="width:150px;background:oklch(94% 0.02 260);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:800 11px 'Plus Jakarta Sans';color:oklch(40% 0.02 260);text-transform:uppercase;letter-spacing:.04em">Backlog</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-142</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Rename "Uncategorized"</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-118</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Docs sync is lying again</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(90% 0.06 250);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:800 11px 'Plus Jakarta Sans';color:oklch(35% 0.1 250);text-transform:uppercase;letter-spacing:.04em">Todo</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-151</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Onboarding forgets you exist</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(88% 0.08 60);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:800 11px 'Plus Jakarta Sans';color:oklch(38% 0.11 60);text-transform:uppercase;letter-spacing:.04em">In Progress</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-160</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">CI beats my patience now</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-163</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Add confetti on ship</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(88% 0.07 300);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:800 11px 'Plus Jakarta Sans';color:oklch(38% 0.1 300);text-transform:uppercase;letter-spacing:.04em">In Review</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-155</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Dark mode, minus the bugs' hiding spot</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(89% 0.07 150);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:800 11px 'Plus Jakarta Sans';color:oklch(35% 0.1 150);text-transform:uppercase;letter-spacing:.04em">Done</div>
+        <div style="background:#fff;border-radius:10px;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);opacity:.75">
+          <div style="font:600 9.5px ui-monospace;color:#b4aa9a">ENG-140</div>
+          <div style="font:600 11.5px 'Inter';color:#2b2318;margin-top:3px">Burndown burns morale too</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Grid &amp; Glow — calm, minimal chrome, one accent glow</div>
+<div class="dv-card" style="width:1000px;height:640px;display:flex;font-family:'Inter',sans-serif;background:oklch(99% 0.002 90)">
+  <div style="width:190px;border-right:1px solid oklch(94% 0.002 90);padding:16px 12px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:24px;height:24px;border-radius:6px;background:oklch(60% 0.19 290);display:flex;align-items:center;justify-content:center;color:#fff;font:800 12px 'Plus Jakarta Sans'">N</div>
+      <span style="font:700 14px 'Plus Jakarta Sans';color:#1c1c1e">NovaStructur</span>
+    </div>
+    <div style="border:1px solid oklch(90% 0.002 90);border-radius:8px;padding:8px 12px;font:600 12px 'Inter';text-align:center;color:#6b6b6f">+ New issue</div>
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <div style="padding:7px 10px;border-radius:6px;color:#8b8b8f;font:500 12.5px 'Inter'">Triage</div>
+      <div style="padding:7px 10px;border-radius:6px;color:#8b8b8f;font:500 12.5px 'Inter'">Issues</div>
+      <div style="padding:7px 10px;border-radius:6px;color:oklch(60% 0.19 290);font:600 12.5px 'Inter';position:relative">Board<span style="position:absolute;left:0;top:0;bottom:0;width:2px;background:oklch(60% 0.19 290);border-radius:2px;margin-left:-10px"></span></div>
+      <div style="padding:7px 10px;border-radius:6px;color:#8b8b8f;font:500 12.5px 'Inter'">Cycles</div>
+      <div style="padding:7px 10px;border-radius:6px;color:#8b8b8f;font:500 12.5px 'Inter'">Roadmap</div>
+      <div style="padding:7px 10px;border-radius:6px;color:#8b8b8f;font:500 12.5px 'Inter'">Docs</div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <div style="padding:16px 20px 10px;border-bottom:1px solid oklch(94% 0.002 90)">
+      <div style="font:700 18px 'Plus Jakarta Sans';color:#1c1c1e">Sprint Board</div>
+      <div style="font:400 12px 'Inter';color:#9b9b9f;margin-top:2px">Quiet by default, alive when it matters</div>
+    </div>
+    <div style="flex:1;display:flex;gap:1px;background:oklch(94% 0.002 90);overflow:hidden">
+      <div style="width:150px;background:oklch(99% 0.002 90);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#b7b7bb"></span><span style="font:600 11px 'Inter';color:#6b6b6f">Backlog</span></div>
+        <div style="border:1px solid oklch(93% 0.002 90);border-radius:8px;padding:8px">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-142</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">Rename "Uncategorized"</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(99% 0.002 90);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:oklch(65% 0.15 240)"></span><span style="font:600 11px 'Inter';color:#6b6b6f">Todo</span></div>
+        <div style="border:1px solid oklch(93% 0.002 90);border-radius:8px;padding:8px">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-151</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">Onboarding forgets you exist</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(99% 0.002 90);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:oklch(70% 0.17 60)"></span><span style="font:600 11px 'Inter';color:#6b6b6f">In Progress</span></div>
+        <div style="border:1px solid oklch(60% 0.19 290 / .5);border-radius:8px;padding:8px;box-shadow:0 0 0 3px oklch(60% 0.19 290 / .12),0 4px 14px oklch(60% 0.19 290 / .18)">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-160</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">CI beats my patience now</div>
+          <div style="font:600 9px 'Inter';color:oklch(60% 0.19 290);margin-top:6px">● dragging</div>
+        </div>
+        <div style="border:1px solid oklch(93% 0.002 90);border-radius:8px;padding:8px">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-163</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">Add confetti on ship</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(99% 0.002 90);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:oklch(60% 0.15 320)"></span><span style="font:600 11px 'Inter';color:#6b6b6f">In Review</span></div>
+        <div style="border:1px solid oklch(93% 0.002 90);border-radius:8px;padding:8px">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-155</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">Dark mode, minus the bugs' hideout</div>
+        </div>
+      </div>
+      <div style="width:150px;background:oklch(99% 0.002 90);padding:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:oklch(65% 0.15 150)"></span><span style="font:600 11px 'Inter';color:#6b6b6f">Done</span></div>
+        <div style="border:1px solid oklch(93% 0.002 90);border-radius:8px;padding:8px;opacity:.6">
+          <div style="font:500 9.5px ui-monospace;color:#b7b7bb">ENG-140</div>
+          <div style="font:500 11.5px 'Inter';color:#2c2c2e;margin-top:3px">Burndown burns morale too</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "go deeper on <a class="dv-oid" href="#1d">1d</a> across all screens" · "mix <a class="dv-oid" href="#1c">1c</a>'s color bands with <a class="dv-oid" href="#1b">1b</a>'s soft cards" · "show issue detail for <a class="dv-oid" href="#1a">1a</a>"</p>
+</section>
+
+</x-dc>
+</body>
+</html>

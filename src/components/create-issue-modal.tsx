@@ -4,13 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
+// The parent only mounts this when open (see app-shell.tsx), so every
+// fresh open is a fresh mount: every field's useState starts at its blank
+// default on its own, no effect needed to reset them. Only the imperative
+// focus-the-input side effect stays as an effect.
 export function CreateIssueModal({
-  open,
   onClose,
   teams,
   defaultTeamId,
 }: {
-  open: boolean;
   onClose: () => void;
   teams: { id: string; name: string; key: string }[];
   defaultTeamId?: string;
@@ -24,14 +26,9 @@ export function CreateIssueModal({
   const utils = api.useUtils();
 
   useEffect(() => {
-    if (open) {
-      setTitle("");
-      setDescription("");
-      setExpanded(false);
-      setTeamId(defaultTeamId ?? teams[0]?.id ?? "");
-      setTimeout(() => inputRef.current?.focus(), 10);
-    }
-  }, [open, defaultTeamId, teams]);
+    const t = setTimeout(() => inputRef.current?.focus(), 10);
+    return () => clearTimeout(t);
+  }, []);
 
   const create = api.issue.create.useMutation({
     onSuccess: async (issue) => {
@@ -45,8 +42,6 @@ export function CreateIssueModal({
     onSuccess: (res) => setDescription(res.description),
   });
 
-  if (!open) return null;
-
   const submit = () => {
     if (!title.trim() || !teamId || create.isPending) return;
     create.mutate({ teamId, title: title.trim(), description: description.trim() || undefined });
@@ -58,14 +53,14 @@ export function CreateIssueModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xl rounded-xl border border-neutral-200 bg-white shadow-xl"
+        className="w-full max-w-xl rounded-xl border border-ns-border-strong bg-ns-bg-elevated shadow-xl shadow-black/40"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2.5">
+        <div className="flex items-center justify-between border-b border-ns-border px-4 py-2.5">
           <select
             value={teamId}
             onChange={(e) => setTeamId(e.target.value)}
-            className="rounded-md border border-transparent bg-transparent px-1.5 py-1 text-xs font-medium text-neutral-600 hover:border-neutral-200"
+            className="rounded-md border border-transparent bg-transparent px-1.5 py-1 text-xs font-medium text-ns-text-dim hover:border-ns-border-strong"
           >
             {teams.map((t) => (
               <option key={t.id} value={t.id}>
@@ -73,7 +68,7 @@ export function CreateIssueModal({
               </option>
             ))}
           </select>
-          <span className="text-xs text-neutral-400">New issue</span>
+          <span className="text-xs text-ns-text-faint">New issue</span>
         </div>
 
         <div className="px-4 pt-3">
@@ -89,7 +84,7 @@ export function CreateIssueModal({
               if (e.key === "Escape") onClose();
             }}
             placeholder="Issue title"
-            className="w-full border-none text-lg font-medium text-neutral-900 outline-none placeholder:text-neutral-400"
+            className="w-full border-none bg-transparent text-lg font-medium text-ns-text outline-none placeholder:text-ns-text-faint"
           />
         </div>
 
@@ -100,7 +95,7 @@ export function CreateIssueModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add a description..."
               rows={4}
-              className="w-full resize-none border-none text-sm text-neutral-700 outline-none placeholder:text-neutral-400"
+              className="w-full resize-none border-none bg-transparent text-sm text-ns-text-body outline-none placeholder:text-ns-text-faint"
             />
           </div>
         ) : (
@@ -108,19 +103,19 @@ export function CreateIssueModal({
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="text-xs text-neutral-400 hover:text-neutral-600"
+              className="text-xs text-ns-text-faint hover:text-ns-text-dim"
             >
               + Add description
             </button>
           </div>
         )}
 
-        <div className="flex items-center justify-between border-t border-neutral-100 px-4 py-2.5">
+        <div className="flex items-center justify-between border-t border-ns-border px-4 py-2.5">
           <button
             type="button"
             disabled={!title.trim() || draft.isPending}
             onClick={() => draft.mutate({ title: title.trim() })}
-            className="rounded-md px-2 py-1 text-xs font-medium text-indigo-600 hover:bg-indigo-50 disabled:opacity-40"
+            className="rounded-md px-2 py-1 text-xs font-medium text-ns-accent hover:bg-ns-accent-bg disabled:opacity-40"
             title="Draft a description with your configured AI provider (Settings → AI)"
           >
             {draft.isPending ? "Drafting…" : "✨ AI draft description"}
@@ -129,7 +124,7 @@ export function CreateIssueModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md px-3 py-1.5 text-sm text-neutral-500 hover:bg-neutral-100"
+              className="rounded-md px-3 py-1.5 text-sm text-ns-text-dim hover:bg-white/5"
             >
               Cancel
             </button>
@@ -137,14 +132,14 @@ export function CreateIssueModal({
               type="button"
               onClick={submit}
               disabled={!title.trim() || create.isPending}
-              className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="rounded-md bg-ns-accent-bg px-3 py-1.5 text-sm font-bold text-ns-accent ring-1 ring-ns-accent/70 hover:brightness-110 disabled:opacity-50"
             >
               {create.isPending ? "Creating…" : "Create issue"}
             </button>
           </div>
         </div>
         {draft.isError && (
-          <div className="border-t border-neutral-100 px-4 py-2 text-xs text-red-600">
+          <div className="border-t border-ns-border px-4 py-2 text-xs text-red-400">
             {draft.error.message}
           </div>
         )}

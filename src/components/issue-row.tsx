@@ -41,14 +41,14 @@ export function IssueRow({
   onDecline?: () => void;
 }) {
   return (
-    <div className="group flex items-center gap-2.5 border-b border-neutral-100 px-3 py-2 hover:bg-neutral-50">
+    <div className="group flex items-center gap-2.5 border-b border-ns-border px-3 py-2 hover:bg-white/5">
       <StatusPicker issueId={issue.id} current={issue.state} options={statusOptions} />
       <PriorityPicker issueId={issue.id} current={issue.priority} />
 
       <Link href={`/issue/${issue.identifier}`} className="flex min-w-0 flex-1 items-center gap-2">
-        <span className="w-16 shrink-0 font-mono text-xs text-neutral-400">{issue.identifier}</span>
-        {issue.parent && <CornerDownRight className="h-3 w-3 shrink-0 text-neutral-300" />}
-        <span className="truncate text-sm text-neutral-800">{issue.title}</span>
+        <span className="w-16 shrink-0 font-mono text-xs text-ns-text-faint">{issue.identifier}</span>
+        {issue.parent && <CornerDownRight className="h-3 w-3 shrink-0 text-ns-text-faint" />}
+        <span className="truncate text-sm text-ns-text-body">{issue.title}</span>
         {issue.labels.map(({ label }) => (
           <span
             key={label.id}
@@ -61,10 +61,10 @@ export function IssueRow({
       </Link>
 
       {issue._count.subIssues > 0 && (
-        <span className="shrink-0 text-xs text-neutral-400">{issue._count.subIssues} sub</span>
+        <span className="shrink-0 text-xs text-ns-text-faint">{issue._count.subIssues} sub</span>
       )}
       {issue._count.comments > 0 && (
-        <span className="flex shrink-0 items-center gap-0.5 text-xs text-neutral-400">
+        <span className="flex shrink-0 items-center gap-0.5 text-xs text-ns-text-faint">
           <MessageSquare className="h-3 w-3" /> {issue._count.comments}
         </span>
       )}
@@ -77,14 +77,14 @@ export function IssueRow({
           <button
             onClick={onDecline}
             title="Decline"
-            className="rounded p-1 text-neutral-400 hover:bg-red-50 hover:text-red-600"
+            className="rounded p-1 text-ns-text-faint hover:bg-red-500/10 hover:text-red-400"
           >
             <X className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={onAccept}
             title="Accept"
-            className="rounded p-1 text-neutral-400 hover:bg-green-50 hover:text-green-600"
+            className="rounded p-1 text-ns-text-faint hover:bg-green-500/10 hover:text-green-400"
           >
             <Check className="h-3.5 w-3.5" />
           </button>

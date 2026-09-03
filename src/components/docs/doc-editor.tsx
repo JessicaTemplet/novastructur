@@ -56,7 +56,7 @@ export function DocEditor({ id }: { id: string }) {
   });
 
   if (isLoading || !doc) {
-    return <div className="p-6 text-sm text-neutral-400">Loading…</div>;
+    return <div className="p-6 text-sm text-ns-text-faint">Loading…</div>;
   }
 
   return (
@@ -67,19 +67,19 @@ export function DocEditor({ id }: { id: string }) {
           onChange={(e) => setTitle(e.target.value)}
           onBlur={() => title.trim() && title !== doc.title && update.mutate({ id, title })}
           rows={1}
-          className="w-full resize-none border-none text-2xl font-semibold text-neutral-900 outline-none"
+          className="w-full resize-none border-none bg-transparent font-display text-2xl font-bold text-ns-text outline-none"
         />
         <div className="flex shrink-0 items-center gap-1">
           <button
             onClick={() => setPreview((v) => !v)}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-neutral-500 hover:bg-neutral-100"
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-ns-text-dim hover:bg-white/5"
           >
             {preview ? <Pencil className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
             {preview ? "Edit" : "Preview"}
           </button>
           <button
             onClick={() => confirm("Delete this page?") && del.mutate({ id })}
-            className="rounded p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-600"
+            className="rounded p-1.5 text-ns-text-faint hover:bg-red-500/10 hover:text-red-400"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -88,7 +88,7 @@ export function DocEditor({ id }: { id: string }) {
 
       {preview ? (
         <div className="mt-2">
-          {content.trim() ? <Markdown content={content} /> : <p className="text-sm text-neutral-400">Nothing here yet.</p>}
+          {content.trim() ? <Markdown content={content} /> : <p className="text-sm text-ns-text-faint">Nothing here yet.</p>}
         </div>
       ) : (
         <textarea
@@ -97,13 +97,13 @@ export function DocEditor({ id }: { id: string }) {
           onBlur={() => content !== doc.content && update.mutate({ id, content, baselineContent: baselineContentRef.current })}
           placeholder="Write in markdown — # headings, **bold**, - lists, ```code```..."
           rows={18}
-          className="mt-2 w-full resize-none border-none font-mono text-sm text-neutral-700 outline-none placeholder:text-neutral-400"
+          className="mt-2 w-full resize-none border-none bg-transparent font-mono text-sm text-ns-text-body outline-none placeholder:text-ns-text-faint"
         />
       )}
 
       {doc.linkedIssues.length > 0 && (
-        <div className="mt-8 border-t border-neutral-100 pt-4">
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <div className="mt-8 border-t border-ns-border pt-4">
+          <h3 className="mb-2 font-display text-[10px] font-bold uppercase tracking-wide text-ns-text-faint">
             Linked issues ({doc.linkedIssues.length})
           </h3>
           <div className="space-y-1">
@@ -111,7 +111,7 @@ export function DocEditor({ id }: { id: string }) {
               <Link
                 key={link.id}
                 href={`/issue/${link.issue.identifier}`}
-                className="flex items-center gap-2 text-sm text-neutral-700 hover:underline"
+                className="flex items-center gap-2 text-sm text-ns-text-body hover:underline"
               >
                 <StatusDot color={link.issue.state.color} />
                 {link.issue.identifier} {link.issue.title}
@@ -121,7 +121,7 @@ export function DocEditor({ id }: { id: string }) {
         </div>
       )}
 
-      <div className="mt-8 border-t border-neutral-100 pt-3 text-xs text-neutral-400">
+      <div className="mt-8 border-t border-ns-border pt-3 text-xs text-ns-text-faint">
         Last edited {new Date(doc.updatedAt).toLocaleString()} · by {doc.author.name}
       </div>
     </div>
