@@ -10,6 +10,7 @@ const credentialsSchema = z.object({
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   // Render (and most non-Vercel hosts) proxy requests such that Auth.js
