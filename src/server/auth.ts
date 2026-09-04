@@ -10,15 +10,14 @@ const credentialsSchema = z.object({
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  trustHost: true,
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
   // Render (and most non-Vercel hosts) proxy requests such that Auth.js
   // can't otherwise trust the incoming Host header to build redirect/
   // callback URLs, so it falls back to what the container sees internally
   // instead of the public hostname. Without this, signIn/signOut redirects
   // resolve to e.g. localhost:10000 instead of the real domain.
   trustHost: true,
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
   providers: [
     Credentials({
       credentials: {
