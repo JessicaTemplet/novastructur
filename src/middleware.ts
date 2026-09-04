@@ -1,5 +1,12 @@
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth";
+import { authConfig } from "@/server/auth.config";
+
+// Deliberately built from authConfig alone, not the full export in
+// auth.ts — see the comment there. Pulling in the Credentials provider
+// here (via db.ts's Prisma/pg adapter) breaks under the Edge Runtime
+// middleware normally runs in.
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
