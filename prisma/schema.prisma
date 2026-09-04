@@ -2,13 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Default: SQLite (via libsql driver adapter) for zero-setup local dev.
-// To switch to Postgres later: change provider to "postgresql", swap the
-// driver adapter in src/server/db.ts to @prisma/adapter-pg, and point
-// DATABASE_URL at a postgres connection string. Schema above is written
-// to be compatible with both.
+// Postgres, via the node-postgres driver adapter (see src/server/db.ts),
+// hosted on Neon. Schema was originally written to be SQLite/Postgres
+// dual-compatible, so no model changes were needed for this switch —
+// just this provider line and the adapter.
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Role {
