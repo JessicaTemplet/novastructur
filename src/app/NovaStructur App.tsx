@@ -186,7 +186,7 @@ export default function NovaStructurApp() {
             boxShadow: "0 0 40px rgba(0,0,0,.4)",
           }}
         >
-          <img src="/assets/novastructur-logo.png" style={{ width: 56, height: 56, borderRadius: 12, filter: "hue-rotate(150deg) saturate(1.6) brightness(1.15) drop-shadow(0 0 14px oklch(82% 0.15 200 / .7))" }} alt="NovaStructur" />
+          <img src="/public/novastructur-logo.png" style={{ width: 56, height: 56, borderRadius: 12, filter: "hue-rotate(150deg) saturate(1.6) brightness(1.15) drop-shadow(0 0 14px oklch(82% 0.15 200 / .7))" }} alt="NovaStructur" />
           <div style={{ textAlign: "center" }}>
             <div style={{ font: "800 20px 'Plus Jakarta Sans'", color: "#f2fbfc", letterSpacing: ".02em" }}>NOVASTRUCTUR</div>
             <div style={{ font: "500 12.5px 'Inter'", color: "oklch(80% 0.006 260)", marginTop: 6 }}>
