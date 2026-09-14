@@ -75,7 +75,7 @@ function AiSettingsForm({ initialSettings }: { initialSettings: { provider: Prov
           <select
             value={provider}
             onChange={(e) => setProvider(e.target.value as Provider)}
-            className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm"
+            className="w-full rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-900"
           >
             {(Object.keys(PROVIDER_LABEL) as Provider[]).map((p) => (
               <option key={p} value={p}>
@@ -96,7 +96,7 @@ function AiSettingsForm({ initialSettings }: { initialSettings: { provider: Prov
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={hasKey ? "••••••••••••" : "sk-..."}
-                className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm outline-none focus:border-indigo-400"
+                className="w-full rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-900 outline-none focus:border-indigo-400"
               />
             </div>
 
@@ -106,7 +106,7 @@ function AiSettingsForm({ initialSettings }: { initialSettings: { provider: Prov
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder={provider === "OPENAI" ? "gpt-4o-mini" : provider === "ANTHROPIC" ? "claude-sonnet-5" : "model name"}
-                className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm outline-none focus:border-indigo-400"
+                className="w-full rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-900 outline-none focus:border-indigo-400"
               />
             </div>
 
@@ -117,7 +117,7 @@ function AiSettingsForm({ initialSettings }: { initialSettings: { provider: Prov
                   value={baseUrl}
                   onChange={(e) => setBaseUrl(e.target.value)}
                   placeholder="https://api.groq.com/openai/v1"
-                  className="w-full rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm outline-none focus:border-indigo-400"
+                  className="w-full rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-900 outline-none focus:border-indigo-400"
                 />
               </div>
             )}
