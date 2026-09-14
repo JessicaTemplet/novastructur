@@ -263,7 +263,7 @@ export default function NovaStructurApp() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <img src="/assets/novastructur-logo.png" style={{ width: 28, height: 28, borderRadius: 6, filter: "hue-rotate(150deg) saturate(1.6) brightness(1.15) drop-shadow(0 0 8px oklch(82% 0.15 200 / .7))" }} alt="" />
+          <img src="public/novastructur-logo.png" style={{ width: 28, height: 28, borderRadius: 6, filter: "hue-rotate(150deg) saturate(1.6) brightness(1.15) drop-shadow(0 0 8px oklch(82% 0.15 200 / .7))" }} alt="" />
           <span style={{ font: "700 13px 'Plus Jakarta Sans'", color: "#f2fbfc", letterSpacing: ".03em" }}>NOVASTRUCTUR</span>
         </div>
         <div
